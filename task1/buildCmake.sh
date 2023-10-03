@@ -1,0 +1,1 @@
+((mkdir cmake_build || echo "cmake_build exists skipping...")  && cd cmake_build && cmake .. && make && ./nm_1) || exit
