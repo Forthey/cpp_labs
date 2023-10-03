@@ -34,8 +34,10 @@ void List<Data>::pushBack(const Data& data) {
 
 template<typename Data>
 Data List<Data>::popBack(bool &popSuccessFul) {
-    if (head == nullptr)
+    if (head == nullptr) {
         popSuccessFul = false;
+        return Data();
+    }
 
     ListElement* listElement = head;
     ListElement* previousListElement = nullptr;
@@ -47,7 +49,11 @@ Data List<Data>::popBack(bool &popSuccessFul) {
 
     Data data = listElement->data;
     delete listElement;
-    previousListElement->next = nullptr;
+
+    if (previousListElement != nullptr)
+        previousListElement->next = nullptr;
+    else
+        head = nullptr;
 
     popSuccessFul = true;
     len--;

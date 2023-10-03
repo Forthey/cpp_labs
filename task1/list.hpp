@@ -31,3 +31,5 @@ private:
     } *head;
     size_t len;
 };
+
+template class List<int>;
