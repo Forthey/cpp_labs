@@ -1,9 +1,5 @@
 #include "list.hpp"
 
-int compare(int a, int b) {
-    return a - b;
-}
-
 int main() {
     Alg::List<int> list;
 
