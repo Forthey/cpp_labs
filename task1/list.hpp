@@ -1,10 +1,23 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 namespace Alg {
     template<typename Data>
-    int defaultCompareFunc(Data data1, Data data2) {
+    int defaultCompareFunc(const Data &data1, const Data &data2) {
         return data1 - data2;
+    }
+   
+    template<typename Data>
+    void defaultDisplayFunc(std::ostream &out, const Data &data) {
+        out << data;
+    }
+
+    template<typename Data>
+    Data defaultParseFunc(std::istream& in) {
+        Data data;
+        in >> data;
+        return data;
     }
 
     /*
@@ -28,12 +41,15 @@ namespace Alg {
         bool empty();
 
         size_t length();
-        void display(std::ostream& out = std::cout);
+
+        void display(std::ostream& out = std::cout, void(&displayFunc)(std::ostream &, const Data &) = defaultDisplayFunc);
+        List<Data>& read(const size_t size, std::istream& in = std::cin, Data(&parseFunc)(std::istream&) = defaultParseFunc);
+
         size_t find(const Data& data);
         // List<Data>& findAll(const Data& data);
-        Data& min(int(&compareFunction)(Data, Data) = defaultCompareFunc);
-        Data& max(int(&compareFunction)(Data, Data) = defaultCompareFunc);
-        List<Data>& sort(int(&compareFunction)(Data, Data) = defaultCompareFunc);
+        Data& min(int(&compareFunc)(const Data&, const Data&) = defaultCompareFunc);
+        Data& max(int(&compareFunc)(const Data&, const Data&) = defaultCompareFunc);
+        List<Data>& sort(int(&compareFunc)(const Data&, const Data&) = defaultCompareFunc);
 
         List<Data>& operator<<(const Data& data);
         List<Data>& operator>>(const Data& data);
@@ -50,8 +66,8 @@ namespace Alg {
 
         size_t len;
 
-        Data& min(int(&compareFunction)(Data, Data), size_t a, size_t b);
-        Data& max(int(&compareFunction)(Data, Data), size_t a, size_t b);
+        Data& min(int(&compareFunc)(const Data&, const Data&), size_t a, size_t b);
+        Data& max(int(&compareFunc)(const Data&, const Data&), size_t a, size_t b);
         void swap(Data& data1, Data& data2);
     };
 
@@ -193,7 +209,7 @@ namespace Alg {
     }
 
     template<typename Data>
-    void List<Data>::display(std::ostream& out) {
+    void List<Data>::display(std::ostream& out, void(&displayFunc)(std::ostream&, const Data&)) {
         ListElement* element = head;
 
         if (len == 0) {
@@ -201,11 +217,24 @@ namespace Alg {
         }
 
         for (size_t i = 0; i < len && element != nullptr; i++) {
-            out << element->data << " ";
+            displayFunc(out, element->data);
+            out << std::endl;
             element = element->next;
         }
         out << std::endl;
     }
+
+    template<typename Data>
+    List<Data>& List<Data>::read(const size_t size, std::istream& in, Data(&parseFunc)(std::istream&)) {
+        std::string dataAsString;
+        for (size_t i = 0; i < size; i++) {
+            *this << parseFunc(in);
+        }
+
+        return *this;
+    }
+
+
     template<typename Data>
     size_t List<Data>::find(const Data& data) {
         ListElement* listElement = head;
@@ -221,17 +250,17 @@ namespace Alg {
     }
 
     template<typename Data>
-    Data& List<Data>::min(int(&compareFunction)(Data, Data)) {
-        return min(compareFunction, 0, len);
+    Data& List<Data>::min(int(&compareFunc)(const Data&, const Data&)) {
+        return min(compareFunc, 0, len);
     }
 
     template<typename Data>
-    Data& List<Data>::max(int(&compareFunction)(Data, Data)) {
-        return max(compareFunction, 0, len);
+    Data& List<Data>::max(int(&compareFunc)(const Data&, const Data&)) {
+        return max(compareFunc, 0, len);
     }
 
     template<typename Data>
-    Data& List<Data>::min(int(&compareFunction)(Data, Data), size_t a, size_t b) {
+    Data& List<Data>::min(int(&compareFunc)(const Data&, const Data&), size_t a, size_t b) {
         if (len == 0 || a >= b)
             throw std::runtime_error("Cannot find the max element of an empty list");
 
@@ -242,7 +271,7 @@ namespace Alg {
         listElement = listElement->next;
 
         for (size_t i = a + 1; i < b; i++) {
-            if (compareFunction(listElement->data, *min) < 0)
+            if (compareFunc(listElement->data, *min) < 0)
                 min = &listElement->data;
             listElement = listElement->next;
         }
@@ -251,7 +280,7 @@ namespace Alg {
     }
 
     template<typename Data>
-    Data& List<Data>::max(int(&compareFunction)(Data, Data), size_t a, size_t b) {
+    Data& List<Data>::max(int(&compareFunc)(const Data&, const Data&), size_t a, size_t b) {
         if (len == 0 || a >= b)
             throw std::runtime_error("Cannot find the max element of an empty list");
 
@@ -262,7 +291,7 @@ namespace Alg {
         listElement = listElement->next;
 
         for (size_t i = a + 1; i < b; i++) {
-            if (compareFunction(listElement->data, *max) > 0)
+            if (compareFunc(listElement->data, *max) > 0)
                 max = &listElement->data;
             listElement = listElement->next;
         }
@@ -278,7 +307,7 @@ namespace Alg {
     }
 
     template<typename Data>
-    List<Data>& List<Data>::sort(int(&compareFunction)(Data, Data)) {
+    List<Data>& List<Data>::sort(int(&compareFunc)(const Data&, const Data&)) {
         if (len == 0)
             return *this;
 
@@ -286,7 +315,7 @@ namespace Alg {
         ListElement* listElement = head;
 
         for (size_t i = 1; i < len; i++) {
-            swap(listElement->data, min(compareFunction, i, len));
+            swap(listElement->data, min(compareFunc, i, len));
             listElement = listElement->next;
         }
 
