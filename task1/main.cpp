@@ -1,14 +1,18 @@
 #include "list.hpp"
+
+int compare(int a, int b) {
+    return a - b;
+}
+
 int main() {
-    List<int> list;
+    Alg::List<int> list;
 
     for (int i = 0; i < 10; i++) {
-        list << i << i + 1;
+        list << rand() % 15 << rand() % 25;
     }
-
     list.display(std::cout);
-    std::cout << list.find(5);
-    std::cout << list.find(0);
-    std::cout << list.find(10);
+    list[5] = -5;
+    list.display(std::cout);
+    list.sort().display();
     return 0;
 }
