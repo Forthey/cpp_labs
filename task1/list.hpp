@@ -62,7 +62,9 @@ namespace Alg {
         void display(std::ostream& out = std::cout, void(&displayFunc)(std::ostream &, const Data &) = defaultDisplayFunc) const;
         List<Data>& read(const size_t size, std::istream& in = std::cin, Data(&parseFunc)(std::istream&) = defaultParseFunc);
         List<Data>& readSorted(const size_t size, std::istream& in = std::cin, int(&compareFunc)(const Data&, const Data&) = defaultCompareFunc, Data(&parseFunc)(std::istream&) = defaultParseFunc);
-
+        List<Data>& read(std::istream& in = std::cin, Data(&parseFunc)(std::istream&) = defaultParseFunc);
+        List<Data>& readSorted(std::istream& in = std::cin, int(&compareFunc)(const Data&, const Data&) = defaultCompareFunc, Data(&parseFunc)(std::istream&) = defaultParseFunc);
+      
         size_t find(const Data& data) const;
         // List<Data>& findAll(const Data& data);
         Data& min(int(&compareFunc)(const Data&, const Data&) = defaultCompareFunc) const;
@@ -203,6 +205,9 @@ namespace Alg {
             return *this;
 
         listElement->next = newListElement;
+
+        len++;
+
         return *this;
     }
 
@@ -225,9 +230,10 @@ namespace Alg {
 
         ListElement* listElement = head;
         for (size_t i = 0; i < len; i++) {
-            if (compareFunc(listElement->data, data) < 0) {
+            if (compareFunc(listElement->data, data) > 0) {
                 return pushAt(i, data);
             }
+            listElement = listElement->next;
         }
 
         return pushBack(data);
@@ -376,6 +382,7 @@ namespace Alg {
         for (size_t i = 0; i < size; i++) {
             *this << parseFunc(in);
         }
+        in.eof();
         return *this;
     }
 
@@ -385,6 +392,31 @@ namespace Alg {
             Data data = parseFunc(in);
             pushSorted(data, compareFunc);
         }
+        return *this;
+    }
+
+    template<typename Data>
+    List<Data>& List<Data>::read(std::istream& in, Data(&parseFunc)(std::istream&)) {
+        if (in.eof())
+            return *this;
+
+        do {
+            *this << parseFunc(in);
+        } while (!in.eof());
+
+        return *this;
+    }
+
+    template<typename Data>
+    List<Data>& List<Data>::readSorted(std::istream& in, int(&compareFunc)(const Data&, const Data&), Data(&parseFunc)(std::istream&)) {
+        if (in.eof())
+            return *this;
+
+        do {
+            Data data = parseFunc(in);
+            pushSorted(data, compareFunc);
+        } while (!in.eof());
+
         return *this;
     }
 
