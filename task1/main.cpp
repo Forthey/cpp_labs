@@ -106,7 +106,57 @@ void customFile() {
 
 void customConsole() {
     using namespace std;
-    cout << "Лень реализовывать, выход..." << endl;
+    Alg::List<string> list1, list2;
+    size_t size;
+    cout << "Создание первого списка" << endl;
+    cout << "Введите число слов в списке: ";
+    cin >> size;
+    cout << "Введите " << size << " слов списка:" << endl;
+    list1.readSorted(size, std::cin, compareStrings);
+
+    cout << "Создание второго списка" << endl;
+    cout << "Введите число слов в списке: ";
+    cin >> size;
+    cout << "Введите " << size << " слов списка : " << endl;
+    list2.readSorted(size, std::cin, compareStrings);
+
+    cout << "Списки считаны" << endl;
+    cout << "Список 1 отсортирован?: " << (list1.sorted(compareStrings) ? "true" : "false") << endl;
+    cout << "Список 2 отсортирован?: " << (list2.sorted(compareStrings) ? "true" : "false") << endl;
+
+    Alg::List<std::string> list12 = (list1 + list2).sort(compareStrings);
+
+    cout << "Результирующий список отсортирован?: " << (list12.sorted(compareStrings) ? "true" : "false") << endl;
+
+    cout << "display - вывести результирующий список" << endl;
+    cout << "write - записать список в файл" << endl;
+    cout << "back - выход" << endl;
+
+    std::string response;
+    cout << "> ";
+    cin >> response;
+    if (response == "display") {
+        list12.display();
+    }
+    else if (response == "write") {
+        std::string filename;
+        cout << "Введите имя файла: ";
+        cin >> filename;
+        ofstream file(filename);
+
+        if (!file.is_open()) {
+            cout << "Что-то помешало открыть файл, завершение..." << endl;
+            return;
+        }
+
+        cout << "Записывание результирующего списка в файл..." << endl;
+        list12.display(file);
+        file.close();
+        cout << "Список записан" << endl;
+    }
+    else if (response == "back") {
+        return;
+    }
 }
 
 void custom() {
