@@ -50,6 +50,7 @@ namespace Alg {
         void tangle(ListElement* left, ListElement* right);
         void increasePriority(ListElement* listElement);
     public:
+        explicit SelfOrganizingList();
         explicit SelfOrganizingList(int(&compareFunc)(const Data&, const Data&));
         SelfOrganizingList(const SelfOrganizingList<Data>& SelfOrganizingList);
 
@@ -93,7 +94,9 @@ namespace Alg {
         SelfOrganizingList<Data>& operator<<(const Data& data);
         SelfOrganizingList<Data>& operator<<(const SelfOrganizingList<Data>& list);
         SelfOrganizingList<Data>& operator>>(const Data& data);
+
         SelfOrganizingList<Data> operator+(const SelfOrganizingList<Data>& list) const;
+        SelfOrganizingList<Data>& operator=(const SelfOrganizingList<Data>& list);
         Data& operator[](size_t index);
 
         ~SelfOrganizingList();
@@ -104,6 +107,9 @@ namespace Alg {
      * Class SelfOrganizingList's functions definitions
      */
 
+
+    template<typename Data>
+    SelfOrganizingList<Data>::SelfOrganizingList() :compareFunc(defaultCompareFunc), head(nullptr), tail(nullptr), len(0) {}
 
     template<typename Data>
     SelfOrganizingList<Data>::SelfOrganizingList(int(&compareFunc)(const Data&, const Data&)) : compareFunc(compareFunc), head(nullptr), tail(nullptr), len(0) {}
@@ -403,15 +409,14 @@ namespace Alg {
         ListElement* element = head;
 
         if (len == 0) {
-            out << "<Empty SelfOrganizingList>" << std::endl;
+            return;
         }
 
         for (size_t i = 0; i < len && element != nullptr; i++) {
             displayFunc(out, element->data);
-            out << std::endl;
+            out << "\n";
             element = element->next;
         }
-        out << std::endl;
     }
 
     template<typename Data>
@@ -607,29 +612,41 @@ namespace Alg {
 
 
     template<typename Data>
-    SelfOrganizingList<Data>& SelfOrganizingList<Data>::operator<<(const Data& data) {
+    inline SelfOrganizingList<Data>& SelfOrganizingList<Data>::operator<<(const Data& data) {
         return push(data);
     }
 
     template<typename Data>
-    SelfOrganizingList<Data>& SelfOrganizingList<Data>::operator<<(const SelfOrganizingList<Data>& list) {
+    inline SelfOrganizingList<Data>& SelfOrganizingList<Data>::operator<<(const SelfOrganizingList<Data>& list) {
         return push(list);
     }
 
     template<typename Data>
-    SelfOrganizingList<Data>& SelfOrganizingList<Data>::operator>>(const Data& data) {
+    inline SelfOrganizingList<Data>& SelfOrganizingList<Data>::operator>>(const Data& data) {
         return popBack(data);
     }
 
     template<typename Data>
-    SelfOrganizingList<Data> SelfOrganizingList<Data>::operator+(const SelfOrganizingList<Data>& list) const {
+    inline SelfOrganizingList<Data> SelfOrganizingList<Data>::operator+(const SelfOrganizingList<Data>& list) const {
         SelfOrganizingList<Data> resultList(*this);
         resultList.push(list);
         return resultList;
     }
 
     template<typename Data>
-    Data& SelfOrganizingList<Data>::operator[](size_t index) {
+    inline SelfOrganizingList<Data>& SelfOrganizingList<Data>::operator=(const SelfOrganizingList<Data>& list)
+    {
+        clear();
+        ListElement* listElement = list.head;
+        for (size_t i = 0; i < list.len; i++) {
+            push(listElement->data);
+            listElement = listElement->next;
+        }
+        return *this;
+    }
+
+    template<typename Data>
+    inline Data& SelfOrganizingList<Data>::operator[](size_t index) {
         return at(index);
     }
 }
