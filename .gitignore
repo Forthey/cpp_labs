@@ -5,6 +5,8 @@
 
 # Cmake files 
 **/cmake_build
+**/cmake-build-debug
+**/.idea
 
 # Executable
 **/*.exe

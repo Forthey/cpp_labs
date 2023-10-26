@@ -1,8 +1,6 @@
 #include <fstream>
 #include "list.hpp"
 
-#pragma execution_character_set("utf-8")
-
 int compareStrings(const std::string& s1, const std::string& s2) {
     return s1.compare(s2);
 }
@@ -220,7 +218,7 @@ void menu() {
 }
 
 int main() {
-    std::locale::global(std::locale("ru_RU.utf8"));
+    system("chcp 1251");
     menu();
     return 0;
 }

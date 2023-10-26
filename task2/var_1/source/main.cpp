@@ -50,7 +50,7 @@ void buildDatabase() {
 
 int main() {
     std::system("chcp 1251");
-    std::locale::global(std::locale("ru_RU.utf8"));
+    //std::locale::global(std::locale("ru_RU.utf8"));
     //buildDatabase();
     Alg::Notebook notebook;
     notebook.loadFromFile("data/mammoths.note");
