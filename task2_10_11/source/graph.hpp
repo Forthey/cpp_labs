@@ -11,15 +11,16 @@ namespace Alg {
         bool matrixSet = false;
         int vertexNumber = 0;
 
-        int vtoi(int v) const;
-        int itov(int i) const;
+        static int vtoi(int v) ;
+        static int itov(int i) ;
 
-        bool readAdjMatrix(std::ifstream& file);
-        bool readAdjList(std::ifstream& file);
-        bool writeAdjMatrix(std::ofstream& file);
-        bool writeAdjList(std::ofstream& file);
+        void readAdjMatrix(std::ifstream& file);
+        void readAdjList(std::ifstream& file);
+        void writeAdjMatrix(std::ofstream& file);
+        void writeAdjList(std::ofstream& file);
     public:
         enum TypeCode {
+            NONE = -1,
             ADJ_LIST = 0,
             ADJ_MATRIX = 1
         };
@@ -27,10 +28,8 @@ namespace Alg {
         Graph() = default;
         Graph(const std::string &filename);
 
-        bool read(const std::string& filename);
+        TypeCode read(const std::string& filename);
         bool write(const std::string& filename, TypeCode as = ADJ_LIST);
-
-        void clear(bool clearAdjList = true, bool clearAdjMatrix = true);
 
         const AdjacencyList& asAdjList();
         const AdjacencyMatrix& asAdjMatrix();

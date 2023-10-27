@@ -8,11 +8,11 @@ namespace Alg {
         read(filename);
     }
 
-    bool Graph::read(const std::string& filename)
+    Graph::TypeCode Graph::read(const std::string& filename)
     {
         std::ifstream file(filename);
         if (!file.is_open()) {
-            return false;
+            return NONE;
         }
         int code = 0;
 
@@ -20,17 +20,17 @@ namespace Alg {
         switch (code)
         {
         case ADJ_LIST:
-            return readAdjList(file);
+            readAdjList(file);
+            return ADJ_LIST;
         case ADJ_MATRIX:
-            return readAdjMatrix(file);
+            readAdjMatrix(file);
+            return ADJ_MATRIX;
         default:
-            return false;
+            return NONE;
         }
-
-        return true;
     }
 
-    bool Graph::readAdjMatrix(std::ifstream& file) {
+    void Graph::readAdjMatrix(std::ifstream& file) {
         int vertexNumber = 0;
 
         file >> vertexNumber;
@@ -45,10 +45,9 @@ namespace Alg {
             }
         }
         matrixSet = true;
-        return true;
     }
 
-    bool Graph::readAdjList(std::ifstream& file) {
+    void Graph::readAdjList(std::ifstream& file) {
         int vertexNumber = 0;
 
         file >> vertexNumber;
@@ -63,7 +62,6 @@ namespace Alg {
             }
         }
         listSet = true;
-        return true;
     }
 
     bool Graph::write(const std::string& filename, TypeCode as)
@@ -76,9 +74,11 @@ namespace Alg {
         switch (as)
         {
         case Alg::Graph::ADJ_LIST:
-            return writeAdjList(file);
+            writeAdjList(file);
+            return true;
         case Alg::Graph::ADJ_MATRIX:
-            return writeAdjMatrix(file);
+            writeAdjMatrix(file);
+            return true;
         default:
             return false;
             break;
@@ -86,7 +86,7 @@ namespace Alg {
         return true;
     }
 
-    bool Graph::writeAdjMatrix(std::ofstream& file) {
+    void Graph::writeAdjMatrix(std::ofstream& file) {
         file << ADJ_MATRIX << " " << vertexNumber << std::endl;
 
         if (!matrixSet) {
@@ -99,32 +99,20 @@ namespace Alg {
             }
             file << std::endl;
         }
-        return true;
     }
 
-    bool Graph::writeAdjList(std::ofstream& file) {
-        file << ADJ_LIST << " " << adjList.size() << std::endl;
-
+    void Graph::writeAdjList(std::ofstream& file) {
         if (!listSet) {
             asAdjList();
         }
 
+        file << ADJ_LIST << " " << adjList.size() << std::endl;
         for (int row = 0; row < vertexNumber; row++) {
+            file << itov(row) << " ";
             for (int i = 0; i < adjList[row].size(); i++) {
                 file << itov(adjList[row][i]) << " ";
             }
             file << std::endl;
-        }
-
-        return true;
-    }
-
-    void Graph::clear(bool clearAdjList, bool clearAdjMatrix) {
-        if (clearAdjList) {
-            adjList.clear();
-        }
-        if (clearAdjMatrix) {
-            adjMatrix.clear();
         }
     }
 
@@ -162,11 +150,11 @@ namespace Alg {
         return adjMatrix;
     }
 
-    inline int Graph::vtoi(int v) const {
+    inline int Graph::vtoi(int v) {
         return v - 1;
     }
 
-    inline int Graph::itov(int i) const {
+    inline int Graph::itov(int i) {
         return i + 1;
     }
 }
