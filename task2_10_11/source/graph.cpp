@@ -71,8 +71,7 @@ namespace Alg {
             return false;
         }
 
-        switch (as)
-        {
+        switch (as) {
         case Alg::Graph::ADJ_LIST:
             writeAdjList(file);
             return true;
@@ -81,9 +80,7 @@ namespace Alg {
             return true;
         default:
             return false;
-            break;
         }
-        return true;
     }
 
     void Graph::writeAdjMatrix(std::ofstream& file) {
@@ -95,7 +92,9 @@ namespace Alg {
 
         for (int row = 0; row < vertexNumber; row++) {
             for (int col = 0; col < vertexNumber; col++) {
-                file << adjMatrix[row][col] << " ";
+                file << adjMatrix[row][col];
+                if (col < vertexNumber - 1)
+                    file << " ";
             }
             file << std::endl;
         }
@@ -108,9 +107,9 @@ namespace Alg {
 
         file << ADJ_LIST << " " << adjList.size() << std::endl;
         for (int row = 0; row < vertexNumber; row++) {
-            file << itov(row) << " ";
+            file << itov(row);
             for (int i = 0; i < adjList[row].size(); i++) {
-                file << itov(adjList[row][i]) << " ";
+                file << " " << itov(adjList[row][i]);
             }
             file << std::endl;
         }
