@@ -20,7 +20,7 @@ namespace Alg {
             std::string path = findPathRec(mask, vertex, to, lengthCapacity - 1);
             // Пути нет
             if (path.empty()) {
-                return "";
+                continue;
             }
             // Путь есть, ура
             return std::to_string(vertex) + path;
