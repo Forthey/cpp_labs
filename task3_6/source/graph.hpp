@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <iostream>
 
 namespace Alg {
     typedef std::vector<std::vector<int>> AdjMatrix;
@@ -9,9 +10,11 @@ namespace Alg {
         AdjMatrix graph;
 
         std::string findPathRec(AdjMatrix &mask, int current, int to, int lengthCapacity);
-    public:
-        Graph(const std::string &filename = "input.txt");
+        std::string findPath(int from, int to, int maxLength);
 
-        void findPath(int from, int to, int maxLength, const std::string &filename = "output.txt");
+        int vtoi(int v);
+        int itov(int i);
+    public:
+        void findPath(const std::string &inFilename = "input.txt", const std::string &outFilename = "output.txt");
     };
 }

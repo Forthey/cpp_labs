@@ -1,36 +1,81 @@
-
+#include <fstream>
 #include "graph.hpp"
 
 namespace Alg {
-    Graph::Graph(const std::string &filename) {
-
-    }
-
     std::string Graph::findPathRec(AdjMatrix &mask, int current, int to, int lengthCapacity) {
         for (int vertex = 0; vertex < mask[current].size(); vertex++) {
             // Если пути нет или это ребро уже проходили
             if (mask[current][vertex] == 0)
                 continue;
             // Проверям, может мы нашли путь не меньше K
-            if (lengthCapacity <= 0 && vertex == to)
-                return std::to_string(vertex);
+            if (lengthCapacity <= 1 && vertex == to)
+                return std::to_string(itov(vertex));
             // Помечаем, что были на ребре current-vertex (убираем его из маски)
+            int oldValue = mask[current][vertex];
             mask[current][vertex] = 0;
+            if (current != vertex) {
+                mask[vertex][current] = 0;
+            }
             // Переходим в вершину vertex и смотрим, есть ли путь
             std::string path = findPathRec(mask, vertex, to, lengthCapacity - 1);
             // Пути нет
             if (path.empty()) {
+                mask[current][vertex] = oldValue;
+                mask[vertex][current] = oldValue;
                 continue;
             }
             // Путь есть, ура
-            return std::to_string(vertex) + path;
+            return std::to_string(itov(vertex)) + " " + path;
         }
         // Если зашли в тупик (все ребра пройдены)
         return "";
     }
 
-    void Graph::findPath(int from, int to, int minLength, const std::string &filename) {
+    std::string Graph::findPath(int from, int to, int minLength) {
         AdjMatrix mask = graph;
-        std::string path = findPathRec(mask, from, to, minLength);
+        return std::to_string(itov(from)) + " " + findPathRec(mask, from, to, minLength);
+    }
+
+    void Graph::findPath(const std::string &inFilename, const std::string &outFilename) {
+        std::ifstream fileIn(inFilename);
+        if (!fileIn.is_open()) {
+            return;
+        }
+
+        int size, from, to, minLength;
+        fileIn >> size >> from >> to >> minLength;
+        graph.resize(size);
+        for (auto& row : graph) {
+            row.resize(size);
+        }
+
+        int vertex1, vertex2;
+        while (!fileIn.eof()) {
+            fileIn >> vertex1 >> vertex2;
+            vertex1 = vtoi(vertex1);
+            vertex2 = vtoi(vertex2);
+            graph[vertex1][vertex2]++;
+            if (vertex1 != vertex2) {
+                graph[vertex2][vertex1]++;
+            }
+        }
+        fileIn.close();
+
+        std::string path = findPath(vtoi(from), vtoi(to), minLength);
+        graph.clear();
+        std::ofstream fileOut(outFilename);
+        if (!fileOut.is_open()) {
+            return;
+        }
+        fileOut << path;
+        fileOut.close();
+    }
+
+    inline int Graph::vtoi(int v) {
+        return v - 1;
+    }
+
+    inline int Graph::itov(int i) {
+        return i + 1;
     }
 }
