@@ -15,6 +15,6 @@ namespace Alg {
         int vtoi(int v);
         int itov(int i);
     public:
-        void findPath(const std::string &inFilename = "input.txt", const std::string &outFilename = "output.txt");
+        bool findPath(const std::string &inFilename = "input.txt", const std::string &outFilename = "output.txt");
     };
 }

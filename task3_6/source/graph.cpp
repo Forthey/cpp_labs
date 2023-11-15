@@ -20,6 +20,7 @@ namespace Alg {
             std::string path = findPathRec(mask, vertex, to, lengthCapacity - 1);
             // Пути нет
             if (path.empty()) {
+                // Делаем вид, что мы по этому пути не ходили
                 mask[current][vertex] = oldValue;
                 mask[vertex][current] = oldValue;
                 continue;
@@ -33,13 +34,17 @@ namespace Alg {
 
     std::string Graph::findPath(int from, int to, int minLength) {
         AdjMatrix mask = graph;
-        return std::to_string(itov(from)) + " " + findPathRec(mask, from, to, minLength);
+        std::string path = findPathRec(mask, from, to, minLength);
+        if (path.empty()) {
+            return "0";
+        }
+        return std::to_string(itov(from)) + " " + path;
     }
 
-    void Graph::findPath(const std::string &inFilename, const std::string &outFilename) {
+    bool Graph::findPath(const std::string &inFilename, const std::string &outFilename) {
         std::ifstream fileIn(inFilename);
         if (!fileIn.is_open()) {
-            return;
+            return false;
         }
 
         int size, from, to, minLength;
@@ -63,12 +68,15 @@ namespace Alg {
 
         std::string path = findPath(vtoi(from), vtoi(to), minLength);
         graph.clear();
+
         std::ofstream fileOut(outFilename);
         if (!fileOut.is_open()) {
-            return;
+            return false;
         }
         fileOut << path;
         fileOut.close();
+
+        return path != "0";
     }
 
     inline int Graph::vtoi(int v) {
