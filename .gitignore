@@ -10,6 +10,7 @@
 
 # Executable
 **/*.exe
+**/task*/task*
 
 # User-specific files
 *.rsuser

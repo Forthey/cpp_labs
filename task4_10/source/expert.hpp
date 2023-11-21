@@ -1,21 +1,25 @@
 #ifndef TASK3_6_EXPERT_H
 #define TASK3_6_EXPERT_H
-#include <string>
+
 #include <iostream>
+#include "question_tree.hpp"
 
-class Expert {
-    class ExpertTree {
+namespace Alg {
+
+    class Expert {
+        QuestionTree *root;
+
+        static void request(const std::string &what);
+        static void line(const std::string &what);
+        static bool readAnswer();
+
+        void readFirstFeatureAndAnswer();
+        void readNewFeatureAndAnswer(QuestionTree *parent);
     public:
-        ExpertTree(std::string &what, ExpertTree *yes, ExpertTree *no) : what(what), yes(yes), no(no) {}
+        Expert(const std::string &pathToDB = "");
 
-        std::string what;
-        ExpertTree *yes, *no;
-    } *expertTree;
+        void startGuessing();
+    };
 
-public:
-    Expert(const std::string &pathToDB = "");
-
-    void startGuessing();
-};
-
+} // Alg
 #endif //TASK3_6_EXPERT_H
