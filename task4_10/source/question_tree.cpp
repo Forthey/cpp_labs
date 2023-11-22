@@ -1,14 +1,16 @@
 #include "question_tree.hpp"
 
 namespace Alg {
-    void QuestionTree::addYes(std::string &question, std::string &answer) {
-        QuestionTree *answerNode = new QuestionTree(answer, nullptr, nullptr); 
-        yes = new QuestionTree(question, answerNode, nullptr);
-    }
-
     void QuestionTree::addNo(std::string &question, std::string &answer) {
-        QuestionTree *answerNode = new QuestionTree(answer, nullptr, nullptr);
-        no = new QuestionTree(question, answerNode, nullptr);
+        // Это ответ
+        if (yes == nullptr) {
+            yes = new QuestionTree(answer, nullptr, nullptr);
+            no = new QuestionTree(what, nullptr, nullptr);
+            what = question;
+        } else {
+            auto *answerNode = new QuestionTree(answer, nullptr, nullptr);
+            no = new QuestionTree(question, answerNode, nullptr);
+        }
     }
 
     void QuestionTree::clear() {
@@ -24,13 +26,5 @@ namespace Alg {
 
     QuestionTree::~QuestionTree() {
         clear();
-    }
-
-    const QuestionTree *QuestionTree::getYes() {
-        return yes;
-    }
-
-    const QuestionTree *QuestionTree::getNo() {
-        return no;
     }
 } // Alg

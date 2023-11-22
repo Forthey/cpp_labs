@@ -9,9 +9,10 @@ namespace Alg {
     class Expert {
         QuestionTree *root;
 
-        static void request(const std::string &what);
-        static void line(const std::string &what);
-        static bool readAnswer();
+        static std::string request(const std::string &what);
+        static void print(const std::string &what);
+        static bool parseAnswer(const std::string &answer);
+        static std::string readLine();
 
         void readFirstFeatureAndAnswer();
         void readNewFeatureAndAnswer(QuestionTree *parent);
