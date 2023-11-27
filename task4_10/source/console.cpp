@@ -1,26 +1,25 @@
 #include "console.hpp"
 
-namespace Alg {
-    void Console::print(const std::string &what) {
-        std::cout << what << std::endl;
-    }
+void Console::print(const std::string &what) {
+    std::cout << what << std::endl;
+}
 
-    std::string Console::request(const std::string &what) {
+std::string Console::request(const std::string &what) {
+    if(!what.empty()) {
         print(what);
-        std::cout << "> ";
-        std::string answer;
-        answer = readLine();
-        return answer;
     }
+    std::cout << "> ";
+    std::string answer;
+    answer = readLine();
+    return answer;
+}
 
-    bool Console::parseAnswer(const std::string &answer) {
-        return answer == "Yes" || answer == "yes" || answer == "y" || answer == "Y";
-    }
+bool Console::parseAnswer(const std::string &answer) {
+    return answer == "Yes" || answer == "yes" || answer == "y" || answer == "Y";
+}
 
-    std::string Console::readLine() {
-        std::string response;
-        std::getline(std::cin, response);
-        return response;
-    }
-
-} // Alg
+std::string Console::readLine() {
+    std::string response;
+    std::getline(std::cin, response);
+    return response;
+}
