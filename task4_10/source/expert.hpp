@@ -11,13 +11,14 @@ namespace Alg {
 
         void readFirstFeatureAndAnswer();
         void readNewFeatureAndAnswer(QuestionTree *parent);
+        void readNewAnswer(Alg::QuestionTree *parent);
 
-        void readRec(std::ifstream &file, QuestionTree *iter);
+        void readRec(std::ifstream &file, QuestionTree **iter);
         void saveRec(std::ofstream &file, QuestionTree *iter);
     public:
         explicit Expert(const std::string &path = "");
 
-        bool read(const std::string &path);
+        bool load(const std::string &path);
         bool save(const std::string &path);
         void clear();
 

@@ -14,8 +14,26 @@ std::string Console::request(const std::string &what) {
     return answer;
 }
 
-bool Console::parseAnswer(const std::string &answer) {
-    return answer == "Yes" || answer == "yes" || answer == "y" || answer == "Y";
+Console::Answer Console::parseAnswer(const std::string &answer) {
+    if (answer == "Exit" || answer == "exit" || answer == "q" || answer == "Q") {
+        return Exit;
+    }
+    if (answer == "Yes" || answer == "yes" || answer == "y" || answer == "Y") {
+        return Yes;
+    }
+    if (answer == "Load" || answer == "load" || answer == "l" || answer == "L") {
+        return Load;
+    }
+    if (answer == "Save" || answer == "save" || answer == "s" || answer == "S") {
+        return Save;
+    }
+    if (answer == "Start" || answer == "start" || answer == "g" || answer == "G") {
+        return Start;
+    }
+    if (answer == "Help" || answer == "help" || answer == "h" || answer == "H") {
+        return Help;
+    }
+    return Hz;
 }
 
 std::string Console::readLine() {

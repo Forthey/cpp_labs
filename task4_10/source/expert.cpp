@@ -6,22 +6,29 @@ namespace Alg {
         root = nullptr;
 
         if (!path.empty()) {
-            read(path);
+            load(path);
         }
     }
 
-    void Expert::readRec(std::ifstream &file, QuestionTree *iter) {
-
+    void Expert::readRec(std::ifstream &file, QuestionTree **iter) {
         std::string what;
         std::getline(file, what);
+        if (what == std::string(1, char(1))) {
+            return;
+        }
+        *iter = new QuestionTree(what, nullptr, nullptr);
+        readRec(file, &(*iter)->yes);
+        readRec(file, &(*iter)->no);
     }
 
-    bool Expert::read(const std::string &path) {
+    bool Expert::load(const std::string &path) {
         std::ifstream file(path);
         if (!file.is_open()) {
+            Console::print("File doesn't exist");
             return false;
         }
-        readRec(file, root);
+        readRec(file, &root);
+        file.close();
         return true;
     }
 
@@ -30,17 +37,19 @@ namespace Alg {
             file << char(1) << std::endl;
             return;
         }
+        file << iter->what << std::endl;
         saveRec(file, iter->yes);
         saveRec(file, iter->no);
-        file << iter->what << std::endl;
     }
 
     bool Expert::save(const std::string &path) {
         std::ofstream file(path);
         if (!file.is_open()) {
+            Console::print("Incorrect filename");
             return false;
         }
         saveRec(file, root);
+        file.close();
         return true;
     }
 
@@ -58,7 +67,7 @@ namespace Alg {
         QuestionTree *current = root;
         while (current != nullptr) {
             // Ответ "Да"
-            if (Console::parseAnswer(Console::request(current->what + "?"))) {
+            if (Console::parseAnswer(Console::request(current->what + "?")) == Console::Yes) {
                 // Ответ "Да" на объект
                 if (current->yes == nullptr) {
                     Console::print("Yaaay, I'm smart after all!");
@@ -69,7 +78,11 @@ namespace Alg {
                 }
             // Ответ "Нет" и при этом дерево закончилось
             } else if (current->no == nullptr) {
-                readNewFeatureAndAnswer(current);
+                if (current->yes == nullptr) {
+                    readNewFeatureAndAnswer(current);
+                } else {
+                    readNewAnswer(current);
+                }
                 break;
             // Ответ "Нет", но вопросы остались
             } else {
@@ -82,7 +95,7 @@ namespace Alg {
         // Просим ввести первую характеристику и соответствующий ей объект
         Console::print("Looks like I don't know anything...");
         std::string answer = Console::request("Would you like to teach me a little?");
-        if (Console::parseAnswer(answer)) {
+        if (Console::parseAnswer(answer) == Console::Yes) {
             std::string name, feature;
             name = Console::request("Enter the object name");
             feature = Console::request("Describe the main feature of the " + name + " (Ex. \"Can swim\")");
@@ -100,7 +113,7 @@ namespace Alg {
     void Expert::readNewFeatureAndAnswer(Alg::QuestionTree *parent) {
         Console::print("Sorry, looks like I don't know what is it...");
         std::string answer = Console::request("Would you like to teach me a little?");
-        if (Console::parseAnswer(answer)) {
+        if (Console::parseAnswer(answer) == Console::Yes) {
             std::string name, feature;
             name = Console::request("Enter the object name");
             feature = Console::request("Describe the main feature of the " + name + " (Ex. \"Can swim\")");
@@ -111,8 +124,24 @@ namespace Alg {
         }
     }
 
+    void Expert::readNewAnswer(Alg::QuestionTree *parent) {
+        Console::print("Sorry, looks like I don't know what is it...");
+        std::string answer = Console::request("Would you like to teach me a little?");
+        if (Console::parseAnswer(answer) == Console::Yes) {
+            std::string name;
+            name = Console::request("Enter the object name which you've guessed");
+            parent->addNo(name);
+            Console::print("Thanks! Now I'm ever smarter!");
+        } else {
+            Console::print("Well, then... fine");
+        }
+    }
+
+
     void Expert::clear() {
-        root->clear();
+        if (root != nullptr) {
+            root->clear();
+        }
         delete root;
     }
 

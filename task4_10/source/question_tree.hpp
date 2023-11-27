@@ -7,12 +7,13 @@ namespace Alg {
     class QuestionTree {
     public:
         std::string what;
-        QuestionTree *yes, *no;
+        QuestionTree *yes = nullptr, *no = nullptr;
 
         QuestionTree(std::string &what, QuestionTree *yes, QuestionTree *no) : what(what), yes(yes), no(no) {}
-        ~QuestionTree();
+        //~QuestionTree();
 
         void addNo(std::string &question, std::string &answer);
+        void addNo(std::string &answer);
         void clear();
     };
 

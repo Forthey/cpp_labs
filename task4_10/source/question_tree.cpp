@@ -2,15 +2,18 @@
 
 namespace Alg {
     void QuestionTree::addNo(std::string &question, std::string &answer) {
-        // Это ответ
-        if (yes == nullptr) {
-            yes = new QuestionTree(answer, nullptr, nullptr);
-            no = new QuestionTree(what, nullptr, nullptr);
-            what = question;
-        } else {
-            auto *answerNode = new QuestionTree(answer, nullptr, nullptr);
-            no = new QuestionTree(question, answerNode, nullptr);
-        }
+        delete yes;
+        delete no;
+
+        yes = new QuestionTree(answer, nullptr, nullptr);
+        no = new QuestionTree(what, nullptr, nullptr);
+        what = question;
+    }
+
+    void QuestionTree::addNo(std::string &answer) {
+        delete no;
+
+        no = new QuestionTree(answer, nullptr, nullptr);
     }
 
     void QuestionTree::clear() {
@@ -24,7 +27,7 @@ namespace Alg {
         }
     }
 
-    QuestionTree::~QuestionTree() {
-        clear();
-    }
+//    QuestionTree::~QuestionTree() {
+//        clear();
+//    }
 } // Alg

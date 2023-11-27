@@ -4,9 +4,19 @@
 
 class Console {
 public:
+    typedef enum {
+        Exit = 0,
+        Yes,
+        Load,
+        Save,
+        Start,
+        Help,
+        Hz
+    } Answer;
+
     static std::string request(const std::string &what);
     static void print(const std::string &what);
-    static bool parseAnswer(const std::string &answer);
+    static Answer parseAnswer(const std::string &answer);
     static std::string readLine();
 };
 
