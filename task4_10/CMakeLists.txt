@@ -9,6 +9,7 @@ set(SOURCE_FILES
         source/main.cpp
         source/expert.cpp
         source/question_tree.cpp
+        source/console.cpp
 )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
