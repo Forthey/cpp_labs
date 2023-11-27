@@ -1,12 +1,47 @@
+#include <fstream>
 #include "expert.hpp"
 
 namespace Alg {
-    Expert::Expert(const std::string &pathToDB) {
+    Expert::Expert(const std::string &path) {
         root = nullptr;
 
-        if (!pathToDB.empty()) {
-            // #TODO: read expert tree from file
+        if (!path.empty()) {
+            read(path);
         }
+    }
+
+    void Expert::readRec(std::ifstream &file, QuestionTree *iter) {
+
+        std::string what;
+        std::getline(file, what);
+    }
+
+    bool Expert::read(const std::string &path) {
+        std::ifstream file(path);
+        if (!file.is_open()) {
+            return false;
+        }
+        readRec(file, root);
+        return true;
+    }
+
+    void Expert::saveRec(std::ofstream &file, QuestionTree *iter) {
+        if (iter == nullptr) {
+            file << char(1) << std::endl;
+            return;
+        }
+        saveRec(file, iter->yes);
+        saveRec(file, iter->no);
+        file << iter->what << std::endl;
+    }
+
+    bool Expert::save(const std::string &path) {
+        std::ofstream file(path);
+        if (!file.is_open()) {
+            return false;
+        }
+        saveRec(file, root);
+        return true;
     }
 
     void Expert::startGuessing() {
@@ -61,6 +96,7 @@ namespace Alg {
 
     }
 
+
     void Expert::readNewFeatureAndAnswer(Alg::QuestionTree *parent) {
         Console::print("Sorry, looks like I don't know what is it...");
         std::string answer = Console::request("Would you like to teach me a little?");
@@ -73,6 +109,15 @@ namespace Alg {
         } else {
             Console::print("Well, then... fine");
         }
+    }
+
+    void Expert::clear() {
+        root->clear();
+        delete root;
+    }
+
+    Expert::~Expert() {
+        clear();
     }
 
 } // Alg

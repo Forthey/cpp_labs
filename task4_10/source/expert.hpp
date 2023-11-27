@@ -11,10 +11,19 @@ namespace Alg {
 
         void readFirstFeatureAndAnswer();
         void readNewFeatureAndAnswer(QuestionTree *parent);
+
+        void readRec(std::ifstream &file, QuestionTree *iter);
+        void saveRec(std::ofstream &file, QuestionTree *iter);
     public:
-        Expert(const std::string &pathToDB = "");
+        explicit Expert(const std::string &path = "");
+
+        bool read(const std::string &path);
+        bool save(const std::string &path);
+        void clear();
 
         void startGuessing();
+
+        ~Expert();
     };
 
 } // Alg
