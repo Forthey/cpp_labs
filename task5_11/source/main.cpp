@@ -5,8 +5,8 @@ std::string getCommands() {
            "delete - delete existing segment\n"
            "display - display segments\n"
            "intersect - check intersection\n"
-           "save - save segments\n"
-           "load - load segments from file\n"
+           //"save - save segments\n"
+           //"load - load segments from file\n"
            "exit - exit program\n"
            "help - list all commands";
 }
