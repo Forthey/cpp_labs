@@ -8,27 +8,27 @@ QuadraticEq::QuadraticEq(double const a, double const b, double const c) : a(a),
 
 void QuadraticEq::solveAsLinear()
 {
-	if (b != 0) {
+	if (b != 0.0) {
 		roots.push_back(-c / b);
 	}
 }
 
 void Alg::QuadraticEq::solveAsQuadratic()
 {
-	double D = b * b - 4 * a * c;
+	double D = b * b - 4.0 * a * c;
 
-	if (D > 0) {
-		roots.push_back((-b - sqrt(D)) / 2 / a);
-		roots.push_back((-b + sqrt(D)) / 2 / a);
+	if (D > 0.0) {
+		roots.push_back((-b - sqrt(D)) / 2.0 / a);
+		roots.push_back((-b + sqrt(D)) / 2.0 / a);
 	}
-	else if (D == 0) {
-		roots.push_back(-b / 2 / a);
+	else if (D == 0.0) {
+		roots.push_back(-b / 2.0 / a);
 	}
 }
 
 std::vector<double> const & QuadraticEq::solve()
 {
-	if (a == 0) {
+	if (a == 0.0) {
 		solveAsLinear();
 	}
 	else {
