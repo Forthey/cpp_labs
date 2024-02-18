@@ -3,9 +3,12 @@
 
 #include "quadratic_equation.hpp"
 
-class Program {
+class ConsoleUserInterface {
+#define ESTIMATED_BAD_MAX_LIMIT 10000000.0 // 10^7
+#define ESTIMATED_BAD_MIN_LIMIT 0.0000001  // 10^-7
+
 	enum Color {
-		Blue = 1,
+		BLUE = 1,
 		GREEN,
 		CYAN,
 		RED,
@@ -24,11 +27,13 @@ class Program {
 
     HANDLE hConsole;
 
-	void print(std::string const& what, Color color = Color::DEFAULT_WHITE) {
-		SetConsoleTextAttribute(hConsole, color);
+	void print(std::string const& what, bool awaitResponseSymbol = false, Color color = Color::DEFAULT_WHITE) {
+		SetConsoleTextAttribute(hConsole, WORD(color));
 		std::cout << what << std::endl;
-		SetConsoleTextAttribute(hConsole, Color::DEFAULT_WHITE);
-		std::cout << "> ";
+		SetConsoleTextAttribute(hConsole, WORD(Color::DEFAULT_WHITE));
+		if (awaitResponseSymbol) {
+			std::cout << "> ";
+		}
 	}
 
 	void printProgramDescription() {
@@ -38,34 +43,43 @@ class Program {
 			"______________________________________________________" << std::endl;
 	}
 public:
-	Program() {
+	ConsoleUserInterface() {
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	}
 
-	void start() {
+	void startUserInteraction() {
 		double a, b, c;
 
 		printProgramDescription();
 
 		while (true) {
-			print("Input coefficients of quadratic equation ax^2+bx+c=0 separated by space\nType '0 0 0' to end program");
+			print("Input coefficients of quadratic equation ax^2+bx+c=0 separated by space");
+			print("Type '0 0 0' to end program");
+
 			if (!(std::cin >> a >> b >> c)) {
-				print("ERROR: You should input 3 numbers separated by space to make program work", Color::RED);
+				print("ERROR: You should input 3 numbers separated by space to make program work", false, Color::RED);
 				std::cin.clear();
 				std::cin.ignore(INT_MAX, '\n');
 				continue;
 			}
 
-			if (a == 0 && b == 0 && c == 0) {
+			if (a == 0.0 && b == 0.0 && c == 0.0) {
 				break;
+			}
+
+			if (abs(a) >= ESTIMATED_BAD_MAX_LIMIT || abs(b) >= ESTIMATED_BAD_MAX_LIMIT || abs(c) >= ESTIMATED_BAD_MAX_LIMIT) {
+				print("In order to avoid large computational errors try to input modulo smaller coefficients", false, Color::YELLOW);
+			}
+			else if (abs(a) <= ESTIMATED_BAD_MIN_LIMIT || abs(b) <= ESTIMATED_BAD_MIN_LIMIT || abs(c) <= ESTIMATED_BAD_MIN_LIMIT) {
+				print("In order to avoid large computational errors try to input modulo bigger coefficients", false, Color::YELLOW);
 			}
 
 			Alg::QuadraticEq equation(a, b, c);
 			std::vector<double> const& roots = equation.solve();
 
-			std::cout << "Equation " + equation.toString() + " has " << roots.size() << " real roots" << std::endl;
+			print("Equation " + equation.toString() + " has " + std::to_string(roots.size()) + " real roots");
 			for (double root : roots) { 
-				std::cout << root << " ";
+				print(std::to_string(root), false, Color::GREEN);
 			}
 			std::cout << std::endl << std::endl;
 
@@ -75,7 +89,7 @@ public:
 };
 
 int main() {
-	Program program;
-	program.start();
+	ConsoleUserInterface cuiInstance;
+	cuiInstance.startUserInteraction();
 	return 0;
 }
