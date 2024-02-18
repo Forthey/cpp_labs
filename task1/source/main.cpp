@@ -27,7 +27,7 @@ class ConsoleUserInterface {
 
     HANDLE hConsole;
 
-	void print(std::string const& what, bool awaitResponseSymbol = false, Color color = Color::DEFAULT_WHITE) {
+	void print(std::string const& what, bool awaitResponseSymbol = false, Color color = Color::DEFAULT_WHITE) const {
 		SetConsoleTextAttribute(hConsole, WORD(color));
 		std::cout << what << std::endl;
 		SetConsoleTextAttribute(hConsole, WORD(Color::DEFAULT_WHITE));
@@ -36,7 +36,7 @@ class ConsoleUserInterface {
 		}
 	}
 
-	void printProgramDescription() {
+	void printProgramDescription() const {
 		std::cout << 
 			"Made by Drekalov Nikita, group 5030102/20001" << std::endl <<
 			"The program counts the roots of the quadratic equation" << std::endl <<
@@ -47,7 +47,7 @@ public:
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	}
 
-	void startUserInteraction() {
+	void startUserInteraction() const {
 		double a, b, c;
 
 		printProgramDescription();
