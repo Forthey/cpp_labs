@@ -42,6 +42,7 @@ class ConsoleUserInterface {
 			"The program counts the roots of the quadratic equation" << std::endl <<
 			"______________________________________________________" << std::endl;
 	}
+
 public:
 	ConsoleUserInterface() {
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -63,7 +64,7 @@ public:
 				continue;
 			}
 
-			if (a == 0.0 && b == 0.0 && c == 0.0) {
+			if (Alg::equalsToZero(a) && Alg::equalsToZero(b) && Alg::equalsToZero(c)) {
 				break;
 			}
 
@@ -89,7 +90,7 @@ public:
 };
 
 int main() {
-	ConsoleUserInterface cuiInstance;
-	cuiInstance.startUserInteraction();
+	ConsoleUserInterface consoleUserInterface;
+	consoleUserInterface.startUserInteraction();
 	return 0;
 }
