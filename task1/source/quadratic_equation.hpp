@@ -9,17 +9,19 @@ namespace Alg {
 		return std::abs(number) <= std::numeric_limits<Type>::epsilon() * exp(expDegMultiplier);
 	}
 
+	typedef std::vector<double> Roots;
+
 	class QuadraticEq {
 		double const a, b, c;
-		std::vector<double> roots;
+		Roots roots;
 
 		void solveAsLinear();
 		void solveAsQuadratic();
 	public:
 		QuadraticEq(double const a, double const b, double const c);
 
-		std::vector<double> const & solve();
-		std::vector<double> const & getRoots() const;
+		Roots const & solve();
+		Roots const & getRoots() const;
 		std::string const toString() const;
 	};
 

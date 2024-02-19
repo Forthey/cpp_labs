@@ -4,8 +4,8 @@
 #include "quadratic_equation.hpp"
 
 class ConsoleUserInterface {
-#define ESTIMATED_BAD_MAX_LIMIT 10000000.0 // 10^7
-#define ESTIMATED_BAD_MIN_LIMIT 0.0000001  // 10^-7
+#define ESTIMATED_BAD_MAX_LIMIT 1000000.0 // 10^6
+#define ESTIMATED_BAD_MIN_LIMIT 0.000001  // 10^-6
 
 	enum Color {
 		BLUE = 1,
@@ -43,6 +43,25 @@ class ConsoleUserInterface {
 			"______________________________________________________" << std::endl;
 	}
 
+	void warnLimitsIfNeed(double const a, double const b, double const c) const {
+		if (abs(a) >= ESTIMATED_BAD_MAX_LIMIT || abs(b) >= ESTIMATED_BAD_MAX_LIMIT || abs(c) >= ESTIMATED_BAD_MAX_LIMIT) {
+			print("In order to avoid large computational errors try to input modulo smaller coefficients", false, Color::YELLOW);
+		}
+		else if ((abs(a) <= ESTIMATED_BAD_MIN_LIMIT && !Alg::equalsToZero(a)) ||
+				 (abs(b) <= ESTIMATED_BAD_MIN_LIMIT && !Alg::equalsToZero(b)) || 
+				 (abs(c) <= ESTIMATED_BAD_MIN_LIMIT && !Alg::equalsToZero(c))) {
+			print("In order to avoid large computational errors try to input modulo bigger coefficients", false, Color::YELLOW);
+		}
+	}
+
+	void printEquationResult(std::string const &equationAsStr, Alg::Roots const &roots) const {
+		print("Equation " + equationAsStr + " has " + std::to_string(roots.size()) + " real roots");
+		for (double root : roots) {
+			print(std::to_string(root), false, Color::GREEN);
+		}
+		std::cout << std::endl << std::endl;
+	}
+	
 public:
 	ConsoleUserInterface() {
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -67,23 +86,12 @@ public:
 			if (Alg::equalsToZero(a) && Alg::equalsToZero(b) && Alg::equalsToZero(c)) {
 				break;
 			}
-
-			if (abs(a) >= ESTIMATED_BAD_MAX_LIMIT || abs(b) >= ESTIMATED_BAD_MAX_LIMIT || abs(c) >= ESTIMATED_BAD_MAX_LIMIT) {
-				print("In order to avoid large computational errors try to input modulo smaller coefficients", false, Color::YELLOW);
-			}
-			else if (abs(a) <= ESTIMATED_BAD_MIN_LIMIT || abs(b) <= ESTIMATED_BAD_MIN_LIMIT || abs(c) <= ESTIMATED_BAD_MIN_LIMIT) {
-				print("In order to avoid large computational errors try to input modulo bigger coefficients", false, Color::YELLOW);
-			}
+			warnLimitsIfNeed(a, b, c);
 
 			Alg::QuadraticEq equation(a, b, c);
-			std::vector<double> const& roots = equation.solve();
-
-			print("Equation " + equation.toString() + " has " + std::to_string(roots.size()) + " real roots");
-			for (double root : roots) { 
-				print(std::to_string(root), false, Color::GREEN);
-			}
-			std::cout << std::endl << std::endl;
-
+		
+			printEquationResult(equation.toString(), equation.solve());
+		
 			std::cin.ignore(INT_MAX, '\n');
 		}
 	}
