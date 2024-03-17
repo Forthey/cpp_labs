@@ -1,6 +1,9 @@
 #include "quadratic_equation.hpp"
 
-using namespace Alg;
+
+std::string const QuadEquationIO::inFilePath = "../data/input.txt";
+std::string const QuadEquationIO::outFilePath = "../data/output.txt";
+
 
 QuadraticEq::QuadraticEq(double const a, double const b, double const c) : a(a), b(b), c(c) 
 {
@@ -13,7 +16,7 @@ void QuadraticEq::solveAsLinear()
 	}
 }
 
-void Alg::QuadraticEq::solveAsQuadratic()
+void QuadraticEq::solveAsQuadratic()
 {
 	double D = b * b - 4.0 * a * c;
 
@@ -45,5 +48,7 @@ std::vector<double> const & QuadraticEq::getRoots() const
 
 std::string const QuadraticEq::toString() const
 {
-	return std::to_string(a) + "*x^2 + " + std::to_string(b) + "*x + " + std::to_string(c) + " = 0";
+	return std::format("{}x^2 + {}x + {}", a, b, c);
 }
+
+
