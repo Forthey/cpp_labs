@@ -30,6 +30,9 @@
     <ClCompile Include="source\teacher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\console_user_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\quadratic_equation.hpp">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\teacher.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\console_user_interface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

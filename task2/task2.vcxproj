@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\console_user_interface.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\quadratic_equation.cpp" />
     <ClCompile Include="source\students_work_sim.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="source\teacher.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\console_user_interface.hpp" />
     <ClInclude Include="source\quadratic_equation.hpp" />
     <ClInclude Include="source\students_work_sim.hpp" />
     <ClInclude Include="source\students.hpp" />

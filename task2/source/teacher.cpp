@@ -141,7 +141,7 @@ void printHeader(int grandesNum, int blockWidth, int surnameWidth) {
 void Teacher::printGradesTable()
 {
 	if (studentsGrades.empty()) {
-		std::cout << "<No grades recorded" << std::endl;
+		std::cout << "<No grades recorded>" << std::endl;
 		return;
 	}
 
@@ -150,11 +150,11 @@ void Teacher::printGradesTable()
 	bool isFirst = true;
 	for (auto& [surname, grades] : studentsGrades) {
 		if (isFirst) {
-			printHeader(grades.size(), blockWidth, surnameWidth);
+			printHeader(static_cast<int>(grades.size()), blockWidth, surnameWidth);
 			isFirst = false;
 		}
 
-		int length = surnameWidth + 1 + (blockWidth + 1) * grades.size();
+		int length = surnameWidth + 1 + (blockWidth + 1) * static_cast<int>(grades.size());
 
 		std::cout << std::setw(surnameWidth) << surname << "|";
 
