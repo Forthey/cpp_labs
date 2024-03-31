@@ -1,13 +1,25 @@
 #include "quadratic_equation.hpp"
 
-
-std::string const QuadEquationIO::inFilePath = "../data/input.txt";
-std::string const QuadEquationIO::outFilePath = "../data/output.txt";
+#include <sstream>
 
 
 QuadraticEq::QuadraticEq(double const a, double const b, double const c) : a(a), b(b), c(c) 
 {
-};
+}
+
+
+QuadraticEq::QuadraticEq(std::string const& equationAsString)
+{
+	std::stringstream ss;
+	ss << equationAsString;
+
+	std::string skipString;
+	if (!(ss >> a) || !(ss >> skipString) || !(ss >> skipString) ||
+		!(ss >> b) || !(ss >> skipString) || !(ss >> skipString) ||
+		!(ss >> c)) {
+		throw std::runtime_error(std::format("{} cannot be parsed as equation", equationAsString));
+	}
+}
 
 void QuadraticEq::solveAsLinear()
 {
@@ -47,6 +59,11 @@ std::vector<double> const & QuadraticEq::getRoots() const
 }
 
 std::string const QuadraticEq::toString() const
+{
+	return std::format("{}x^2 + {}x + {}", a, b, c);
+}
+
+std::string const QuadraticEq::toString(double a, double b, double c)
 {
 	return std::format("{}x^2 + {}x + {}", a, b, c);
 }

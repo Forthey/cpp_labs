@@ -2,6 +2,13 @@
 
 #include <random>
 
+
+StudentsWorkSim::StudentsWorkSim(size_t studentsNum, double goodStudentProb, double badStudentProb)
+{
+    fillStudents(studentsNum, goodStudentProb, badStudentProb);
+}
+
+
 void StudentsWorkSim::fillStudents(size_t studentsNum, double goodStudentProb, double badStudentProb)
 {
     clipProbValues(goodStudentProb, badStudentProb);
@@ -14,17 +21,18 @@ void StudentsWorkSim::fillStudents(size_t studentsNum, double goodStudentProb, d
         double generatedVal = dist(generator);
 
         if (generatedVal <= goodStudentProb) {
-            students.emplace_back(new GoodStudent());
+            students.emplace_back(static_cast<Student *>(new GoodStudent()));
         }
         else if (generatedVal <= goodStudentProb + badStudentProb) {
-            students.emplace_back(new BadStudent());
+            students.emplace_back(static_cast<Student*>(new BadStudent()));
         }
         else {
-            students.emplace_back(new MidStudent());
+            students.emplace_back(static_cast<Student*>(new MidStudent()));
         }
     }
 
 }
+
 
 void StudentsWorkSim::clipProbValues(double& prob1, double& prob2)
 {
@@ -39,10 +47,9 @@ void StudentsWorkSim::clipProbValues(double& prob1, double& prob2)
     }
 }
 
-void StudentsWorkSim::simulateSolvings(size_t studentsNum, double goodStudentProb, double badStudentProb)
-{
-    fillStudents(studentsNum, goodStudentProb, badStudentProb);
 
+void StudentsWorkSim::simulateSolvings()
+{
     for (auto& student : students) {
         student->solveEquations();
     }

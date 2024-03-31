@@ -11,6 +11,8 @@ class StudentsWorkSim
 	void fillStudents(size_t studentsNum, double goodStudentProb, double badStudentProb);
 	void clipProbValues(double& prob1, double& prob2);
 public:
-	void simulateSolvings(size_t studentsNum, double goodStudentProb, double badStudentProb);
+	StudentsWorkSim(size_t studentsNum, double goodStudentProb, double badStudentProb);
+
+	void simulateSolvings();
 };
 

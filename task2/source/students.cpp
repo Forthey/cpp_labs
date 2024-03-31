@@ -2,50 +2,90 @@
 
 #include <fstream>
 #include <random>
+#include <iomanip>
 
-bool Student::readEquations(std::vector<QuadraticEq>& equations)
+
+int Student::surnamePosInFile = 0;
+
+
+Student::Student()
+{
+    std::ifstream surnamesFile("surnames.txt");
+
+    for (int i = 0; i < surnamePosInFile && !surnamesFile.eof(); i++) {
+        surnamesFile.ignore(INT_MAX, '\n');
+    }
+
+    if (surnamesFile.eof()) {
+        surnamesFile.seekg(0);
+        surnamePosInFile = 0;
+    }
+
+    surnamesFile >> surname;
+
+    
+    surnamePosInFile++;
+}
+
+
+std::string const& Student::getSurname() const
+{
+    return surname;
+}
+
+
+void Student::readEquations(std::vector<QuadraticEq>& equations)
 {
     std::ifstream inputFile(inputFileName);
 
     if (!inputFile.is_open()) {
-        return false;
+        return;
     }
 
-    // Coefficients of ax^2 + bx + c = 0
-    double a, b, c;
-
-    while (inputFile >> a >> b >> c) {
-        equations.push_back(QuadraticEq(a, b, c));
+    std::string equationAsStr;
+    while (!inputFile.eof()) {
+        std::getline(inputFile, equationAsStr);
+        if (!equationAsStr.empty()) {
+            equations.push_back(QuadraticEq(equationAsStr));
+        }
     }
 
-    if (!inputFile.eof()) {
-        equations.clear();
-        return false;
-    }
-
-    return true;
+    inputFile.close();
 }
 
-bool Student::writeRoots(std::vector<Roots>& allRoots)
+
+void Student::writeRoots(std::vector<QuadraticEq> &equations, std::vector<Roots>& allRoots) const
 {
-    std::ofstream outputFile(outputFileName);
+    std::ofstream outputFile(outputFileName, std::ofstream::app);
 
     if (!outputFile.is_open()) {
-        return false;
+        return;
     }
 
     for (size_t i = 0; i < allRoots.size(); i++) {
-        outputFile << i + 1 << std::endl;
+        outputFile << equations[i].toString() << std::endl;
         outputFile << surname << std::endl;
 
-        for (auto& root : allRoots[i]) {
-            outputFile << root << " ";
+
+        outputFile << std::setprecision(DEFAULT_PRECISION);
+        switch (allRoots[i].size()) {
+        case 0:
+            outputFile << "N";
+            break;
+        case 1:
+            outputFile << allRoots[i][0];
+            break;
+        case 2:
+            outputFile << allRoots[i][0] << " " << allRoots[i][1];
+            break;
         }
+
         outputFile << std::endl;
     }
 
-    return true;
+    outputFile.close();
 }
+
 
 void GoodStudent::solveEquations()
 {
@@ -58,8 +98,9 @@ void GoodStudent::solveEquations()
         allRoots.push_back(equation.solve());
     }
 
-    writeRoots(allRoots);
+    writeRoots(equations, allRoots);
 }
+
 
 void MidStudent::solveEquations()
 {
@@ -77,12 +118,13 @@ void MidStudent::solveEquations()
             allRoots.push_back(equation.solve());
         }
         else {
-            allRoots.emplace_back(0);
+            allRoots.push_back({ 0 });
         }
     }
 
-    writeRoots(allRoots);
+    writeRoots(equations, allRoots);
 }
+
 
 void BadStudent::solveEquations()
 {
@@ -92,8 +134,8 @@ void BadStudent::solveEquations()
     readEquations(equations);
 
     for (auto& equation : equations) {
-        allRoots.emplace_back(0);
+        allRoots.push_back({ 0 });
     }
 
-    writeRoots(allRoots);
+    writeRoots(equations, allRoots);
 }

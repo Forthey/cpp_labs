@@ -4,31 +4,26 @@
 
 #include "quadratic_equation.hpp"
 
-std::string const inputFileName = "input.txt";
-std::string const outputFileName = "output.txt";
 
 class Student {
 protected:
 	std::string surname;
+	static int surnamePosInFile;
 
-	bool readEquations(std::vector<QuadraticEq> &equations);
-	bool writeRoots(std::vector<Roots>& allRoots);
+	void readEquations(std::vector<QuadraticEq> &equations);
+	void writeRoots(std::vector<QuadraticEq> &equations, std::vector<Roots>& allRoots) const;
 public:
-	virtual void solveEquations() = 0;
+	Student();
 
-	~Student() {
-		std::cout << "Destroyed yaay";
-	}
+	std::string const& getSurname() const;
+
+	virtual void solveEquations() = 0;
 };
 
 
 class GoodStudent : public Student {
 public:
 	void solveEquations() override;
-
-	~GoodStudent() {
-		std::cout << "Student was destroyed yaaay";
-	}
 };
 
 
@@ -37,18 +32,10 @@ class MidStudent : public Student {
 
 public:
 	void solveEquations() override;
-
-	~MidStudent() {
-		std::cout << "Student was destroyed yaaay";
-	}
 };
 
 
 class BadStudent : public Student {
 public:
 	void solveEquations() override;
-
-	~BadStudent() {
-		std::cout << "Student was destroyed yaaay";
-	}
 };
