@@ -1,4 +1,4 @@
-#include "quadratic_equation.hpp"
+﻿#include "quadratic_equation.hpp"
 
 #include <sstream>
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "students_work_sim.hpp"
 #include "teacher.hpp"
 

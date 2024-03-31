@@ -1,4 +1,4 @@
-#include "console_user_interface.hpp"
+п»ї#include "console_user_interface.hpp"
 
 #include <fstream>
 
@@ -20,13 +20,13 @@ void ConsoleUserInterface::exitSim() {
 
 
 void ConsoleUserInterface::generateEquations() {
-	std::cout << "Введите число уравнений (до 49 -- край разметки таблицы)" << std::endl;
+	std::cout << "Р’РІРµРґРёС‚Рµ С‡РёСЃР»Рѕ СѓСЂР°РІРЅРµРЅРёР№ (РґРѕ 49 -- РєСЂР°Р№ СЂР°Р·РјРµС‚РєРё С‚Р°Р±Р»РёС†С‹)" << std::endl;
 	std::cout << "> ";
 
 	int eqCnt;
 
 	if (!(std::cin >> eqCnt)) {
-		std::cout << "Неверный ввод..." << std::endl;
+		std::cout << "РќРµРІРµСЂРЅС‹Р№ РІРІРѕРґ..." << std::endl;
 		return;
 	}
 
@@ -65,11 +65,11 @@ void ConsoleUserInterface::resetInOutFiles() {
 
 
 void ConsoleUserInterface::printMenu() {
-	std::cout << "solve - решить уравнения [Students]" << std::endl;
-	std::cout << "generate - создать уравнения [Teacher]" << std::endl;
-	std::cout << "check - проверить уравнения [Teacher]" << std::endl;
-	std::cout << "grades - вывести таблицу успеваемости [Teacher]" << std::endl;
-	std::cout << "exit - выйти" << std::endl;
+	std::cout << "solve - СЂРµС€РёС‚СЊ СѓСЂР°РІРЅРµРЅРёСЏ [Students]" << std::endl;
+	std::cout << "generate - СЃРѕР·РґР°С‚СЊ СѓСЂР°РІРЅРµРЅРёСЏ [Teacher]" << std::endl;
+	std::cout << "check - РїСЂРѕРІРµСЂРёС‚СЊ СѓСЂР°РІРЅРµРЅРёСЏ [Teacher]" << std::endl;
+	std::cout << "grades - РІС‹РІРµСЃС‚Рё С‚Р°Р±Р»РёС†Сѓ СѓСЃРїРµРІР°РµРјРѕСЃС‚Рё [Teacher]" << std::endl;
+	std::cout << "exit - РІС‹Р№С‚Рё" << std::endl;
 	std::cout << "> ";
 }
 
@@ -84,7 +84,7 @@ void ConsoleUserInterface::startSimulation() {
 			commandRunner[ans]();
 		}
 		else {
-			std::cout << "Команда не найдена" << std::endl;
+			std::cout << "РљРѕРјР°РЅРґР° РЅРµ РЅР°Р№РґРµРЅР°" << std::endl;
 		}
 	}
 }
@@ -94,15 +94,15 @@ void ConsoleUserInterface::startInteration() {
 	std::setlocale(LC_ALL, "Russian");
 	resetInOutFiles();
 
-	std::cout << "--- Моделирование принятия зачета по математике ---" << std::endl;
-	std::cout << "Введите начальные данные в формате:" << std::endl;
-	std::cout << "<число студентов> (до 100, больше имён нету...) <доля хороших> < доля плохих>" << std::endl;
+	std::cout << "--- РњРѕРґРµР»РёСЂРѕРІР°РЅРёРµ РїСЂРёРЅСЏС‚РёСЏ Р·Р°С‡РµС‚Р° РїРѕ РјР°С‚РµРјР°С‚РёРєРµ ---" << std::endl;
+	std::cout << "Р’РІРµРґРёС‚Рµ РЅР°С‡Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјР°С‚Рµ:" << std::endl;
+	std::cout << "<С‡РёСЃР»Рѕ СЃС‚СѓРґРµРЅС‚РѕРІ> (РґРѕ 100, Р±РѕР»СЊС€Рµ РёРјС‘РЅ РЅРµС‚Сѓ...) <РґРѕР»СЏ С…РѕСЂРѕС€РёС…> < РґРѕР»СЏ РїР»РѕС…РёС…>" << std::endl;
 	std::cout << "> ";
 	int studentsNum;
 	double goodStudentProb, badStudentProb;
 
 	if (!(std::cin >> studentsNum >> goodStudentProb >> badStudentProb)) {
-		std::cout << "Похоже, введены неверные данные :(" << std::endl;
+		std::cout << "РџРѕС…РѕР¶Рµ, РІРІРµРґРµРЅС‹ РЅРµРІРµСЂРЅС‹Рµ РґР°РЅРЅС‹Рµ :(" << std::endl;
 		return;
 	}
 
