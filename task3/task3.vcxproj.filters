@@ -27,6 +27,9 @@
     <ClCompile Include="source\Game\Field\GemsField.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\WindowHandler\WindowHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Game\Field\Gem.hpp">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\Game\Field\GemsField.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\WindowHandler\WindowHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
