@@ -6,7 +6,9 @@ enum class GemType {
 	GREEN,
 	BLUE,
 	YELLOW,
-	TYPE_CNT
+	MAGENTA,
+	CYAN,
+	NONE,
 };
 
 struct Point {
@@ -22,7 +24,7 @@ public:
 	explicit Gem(GemType type) : type(type) {}
 	Gem(Gem const& gem) : type(gem.type), focused(gem.focused) {}
 	GemType const& getType() const { return type; }
-	void setFocus(bool focused) { this->focused = focused; }
+	void setFocus(bool focused_) { focused = focused_; }
 	bool getFocus() const { return focused; }
 };
 
