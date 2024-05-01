@@ -1,7 +1,9 @@
 #include "WindowHandler.hpp"
 
+#include <iostream>
 
-WindowHandler::WindowHandler(sf::RenderWindow& window) : window(window) {
+
+WindowHandler::WindowHandler(sf::RenderWindow& window) : window(window), fpsBar(window.getSize()) {
 	game = std::make_unique<Game>(5, 5);
 
 	gemViewSize = gameViewFill * window.getSize().y / game->getGemsField().getFieldSize().y;
@@ -56,6 +58,8 @@ void WindowHandler::render() {
 		}
 	}
 
+	window.draw(fpsBar);
+
 	window.display();
 }
 
@@ -64,11 +68,10 @@ void WindowHandler::runMainLoop() {
 	while (window.isOpen()) {
 		sf::Event event;
 
-		if (!window.hasFocus()) {
-			continue;
-		}
 
 		game->step();
+
+		fpsBar.update();
 		while (window.pollEvent(event)) {
 			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
