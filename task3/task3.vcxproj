@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Game\Bonus.cpp" />
     <ClCompile Include="source\WindowHandler\Components\GameView.cpp" />
     <ClCompile Include="source\WindowHandler\Components\FpsBar.cpp" />
     <ClCompile Include="source\Game\Field\GemsField.cpp" />

@@ -27,4 +27,3 @@ public:
 	void setFocus(bool focused_) { focused = focused_; }
 	bool getFocus() const { return focused; }
 };
-

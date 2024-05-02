@@ -3,7 +3,7 @@
 
 GameView::GameView(sf::Vector2u const& windowSize)
 {
-	game = std::make_unique<Game>(30, 30);
+	game = std::make_unique<Game>(10, 10);
 
 	gemViewSize = gameViewFill * windowSize.y / game->getGemsField().getFieldSize().y;
 

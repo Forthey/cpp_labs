@@ -10,6 +10,22 @@
 #include <thread>
 
 
+
+Game::Game(int width, int height)
+{
+	if (width == 0 || height == 0) {
+		throw std::runtime_error("Игровое поле не может быть пустым");
+	}
+
+	std::function<GemType(FieldSize)> gen = [](FieldSize fieldSize) { return GemType(rand() % int(GemType::NONE)); };
+	FieldSize fieldSize = { width, height };
+
+	field = std::make_unique<GemsField>(fieldSize, gen);
+
+	currentTime = timer.now();
+}
+
+
 GemsField const& Game::getGemsField()
 {
 	return *field;
@@ -18,7 +34,6 @@ GemsField const& Game::getGemsField()
 
 bool Game::pointAdjacent(int x1, int y1, int x2, int y2)
 {
-	std::cout << std::format("x1={}, y1={}, x2={}, y2={}", x1, y1, x2, y2) << std::endl;
 	if (abs(x1 - x2) == 1 && y1 - y2 == 0) {
 		return true;
 	}
@@ -42,7 +57,6 @@ void Game::buildDuplSequence(std::vector<Point>& points, Point const& startPoint
 		point = queue.front();
 		queue.pop();
 
-		std::cout << "hii" << std::endl;
 		if (!visited[point.y * field->getFieldSize().x + point.x] && field->at(point).getType() == searchType) {
 			points.push_back(point);
 
@@ -64,62 +78,61 @@ void Game::buildDuplSequence(std::vector<Point>& points, Point const& startPoint
 }
 
 
-bool Game::removeDuplicates(Point const& startPoint)
+void Game::removeDuplicates(Point const& startPoint, std::vector<Point>& removedPoints)
 {
 	std::vector<Point> points;
 	buildDuplSequence(points, startPoint);
 
-	if (points.size() < 3) {
-		return false;
+	if (points.size() < 3 || field->at(startPoint).getType() == GemType::NONE) {
+		return;
 	}
 
-	std::cout << "NEW DELETE" << std::endl << std::endl;
 	for (Point& point : points) {
-		std::cout << std::format("Deleting point ({}, {}), type {}", point.x, point.y, int(field->at(point).getType())) << std::endl;
 		field->at(point) = Gem(GemType::NONE);
 	}
 
-	return true;
+	for (auto& point : points) {
+		removedPoints.push_back(point);
+	}
 }
 
 
 void Game::shiftGems()
 {
-	changedGemPositions.clear();
-	for (int y = 0; y < field->getFieldSize().y - 1; y++) {
+	for (int y = field->getFieldSize().y - 1; y >= 0; y--) {
 		for (int x = 0; x < field->getFieldSize().x; x++) {
 			if (field->at(x, y).getType() == GemType::NONE) {
-				int iterY = y;
-				while (iterY < field->getFieldSize().y - 1) {
+				for (int iterY = y; iterY < field->getFieldSize().y - 1; iterY++) {
 					field->at(x, iterY) = field->at(x, iterY + 1);
-					iterY++;
-				}
-				field->at(x, iterY) = Gem(GemType::NONE);
 
-				if (field->at(x, y).getType() != GemType::NONE) {
-					changedGemPositions.push_back({ x, y });
+					if (field->at(x, iterY).getType() != GemType::NONE) {
+						if (std::ranges::find_if(
+							changedGemPositions,
+							[x, iterY](Point const& p) {
+								return x == p.x && iterY == p.y;
+							}
+							) == changedGemPositions.end()) {
+							changedGemPositions.push_back({ x, iterY });
+						}
+					}
 				}
+
+				field->at(x, field->getFieldSize().y - 1) = Gem(GemType::NONE);
 			}
 		}
 	}
 }
 
 
-Game::Game(int width, int height)
-{
-	if (width == 0 || height == 0) {
-		throw std::runtime_error("Игровое поле не может быть пустым");
-	}
-
-	std::function<GemType(FieldSize)> gen = [](FieldSize fieldSize) { return GemType(rand() % int(GemType::NONE)); };
-	FieldSize fieldSize = { width, height };
-
-	field = std::make_unique<GemsField>(fieldSize, gen);
-}
-
-
 void Game::step()
 {
+	if (std::chrono::duration_cast<std::chrono::milliseconds>(timer.now() - currentTime) < deltaTime) {
+		return;
+	}
+	currentTime = timer.now();
+
+	std::vector<GemPathWithType> removedPoints;
+
 	switch (state)
 	{
 	case Game::State::DOING_DESTRUCTION:
@@ -127,8 +140,11 @@ void Game::step()
 			state = State::WAITING_CLICK;
 		}
 		for (Point& point : changedGemPositions) {
-			removeDuplicates(point);
+			removedPoints.push_back({field->at(point).getType(), {}});
+			removeDuplicates(point, removedPoints[removedPoints.size() - 1].path);
 		}
+		changedGemPositions.clear();
+		procBonuses(removedPoints);
 		shiftGems();
 		break;
 	default:
@@ -168,6 +184,11 @@ void Game::onClick(int x, int y)
 
 			changedGemPositions.push_back(activeGemPos);
 			changedGemPositions.push_back({ x, y });
+		}
+		else {
+			field->at(activeGemPos).setFocus(false);
+			activeGemPos = { x, y };
+			field->at({x, y}).setFocus(true);
 		}
 		break;
 	case State::DOING_DESTRUCTION:
