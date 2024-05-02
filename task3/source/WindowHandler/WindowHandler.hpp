@@ -3,6 +3,7 @@
 
 #include "Components/FpsBar.hpp"
 #include "Components/GameView.hpp"
+#include "Components/Menu.hpp"
 
 
 class WindowHandler {
@@ -14,6 +15,9 @@ class WindowHandler {
 
 	// FPS bar
 	FpsBar fpsBar;
+
+	// Menu
+	Menu menu;
 	
 	void render();
 public:

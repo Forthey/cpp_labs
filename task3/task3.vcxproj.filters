@@ -39,6 +39,9 @@
     <ClCompile Include="source\Game\Bonus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\WindowHandler\Components\Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Game\Field\Gem.hpp">
@@ -59,5 +62,11 @@
     <ClInclude Include="source\WindowHandler\Components\GameView.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\WindowHandler\Components\Menu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="game.conf" />
   </ItemGroup>
 </Project>

@@ -1,16 +1,9 @@
 #include "GameView.hpp"
 
+#include <fstream>
 
-GameView::GameView(sf::Vector2u const& windowSize)
-{
-	game = std::make_unique<Game>(10, 10);
 
-	gemViewSize = gameViewFill * windowSize.y / game->getGemsField().getFieldSize().y;
-
-	gameViewSize = {
-		gemViewSize * game->getGemsField().getFieldSize().x,
-		gemViewSize * game->getGemsField().getFieldSize().y
-	};
+GameView::GameView(sf::Vector2u const& windowSize) : windowSize(windowSize) {
 }
 
 
@@ -36,14 +29,20 @@ bool GameView::inView(sf::Vector2i const& mousePos) const {
 }
 
 
-void GameView::onClick(sf::Vector2i const& mousePos)
-{
+void GameView::onClick(sf::Vector2i const& mousePos) {
+	if (!game) {
+		return;
+	}
+
 	game->onClick(transformField(mousePos));
 }
 
 
-void GameView::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
+void GameView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	if (!game) {
+		return;
+	}
+
 	GemsField const& field = game->getGemsField();
 
 	for (int y = 0; y < field.getFieldSize().y; y++) {
@@ -76,8 +75,62 @@ void GameView::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 }
 
+sf::Vector2i GameView::readParamsFromConf() {
+	std::ifstream config("game.conf");
+	char ch;
+	int width = -1, height = -1;
 
-void GameView::update()
-{
+	while (!config.eof()) {
+		std::string param;
+		int value;
+
+		config >> ch;
+		while (ch != '=') {
+			param += ch;
+			config >> ch;
+		}
+		if (!(config >> value)) {
+			config.close();
+			return { 0, 0 };
+		}
+		if (param == "GAME_WIDTH") {
+			width = value;
+		}
+		else if (param == "GAME_HEIGHT") {
+			height = value;
+		}
+		if (width != -1 && height != -1) {
+			config.close();
+			return { width, height };
+		}
+	}
+
+	config.close();
+	return { 0, 0 };
+}
+
+void GameView::restart() {
+	sf::Vector2i size = readParamsFromConf();
+	game = std::make_unique<Game>(size.x, size.y);
+
+	gemViewSize = gameViewFill * windowSize.y / game->getGemsField().getFieldSize().y;
+
+	gameViewSize = {
+		gemViewSize * game->getGemsField().getFieldSize().x,
+		gemViewSize * game->getGemsField().getFieldSize().y
+	};
+
+}
+
+void GameView::update() {
+	if (!game) {
+		return;
+	}
+
 	game->step();
+}
+
+void GameView::end()
+{
+	game.release();
 }

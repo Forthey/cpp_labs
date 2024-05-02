@@ -8,8 +8,9 @@
 class GameView : public sf::Drawable
 {
 	std::unique_ptr<Game> game;
+	sf::Vector2u windowSize;
 	sf::Vector2f gameViewSize;
-	float gemViewSize;
+	float gemViewSize = 0.0f;
 	float const gameViewFill = 0.9f;
 
 	std::unordered_map<GemType, sf::Color> gemTypeToColor = {
@@ -21,6 +22,7 @@ class GameView : public sf::Drawable
 		{GemType::CYAN, sf::Color::Cyan},
 	};
 
+	sf::Vector2i readParamsFromConf();
 	sf::Vector2f transformGame(Point const& gamePoint) const;
 	Point transformField(sf::Vector2i const& fieldPoint) const;
 
@@ -28,7 +30,7 @@ class GameView : public sf::Drawable
 public:
 	GameView(sf::Vector2u const& windowSize);
 
-	void start();
+	void restart();
 	void update();
 	void end();
 

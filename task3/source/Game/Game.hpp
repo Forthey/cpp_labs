@@ -23,13 +23,13 @@ class Game {
 	Point activeGemPos = { -1, -1 };
 	std::vector<Point> changedGemPositions;
 
-	float const bonusProcChance = 1;
+	float const bonusProcChance = 0.05f;
 	int const vicinityRadius = 3;
 	int const recolorGemCnt = 3;
 
 	std::chrono::high_resolution_clock timer;
 	std::chrono::steady_clock::time_point currentTime;
-	std::chrono::milliseconds deltaTime{2000};
+	std::chrono::milliseconds deltaTime{500};
 
 	static bool pointAdjacent(int x1, int y1, int x2, int y2);
 

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\WindowHandler\Components\Menu.cpp" />
     <ClCompile Include="source\Game\Bonus.cpp" />
     <ClCompile Include="source\WindowHandler\Components\GameView.cpp" />
     <ClCompile Include="source\WindowHandler\Components\FpsBar.cpp" />
@@ -29,12 +30,16 @@
     <ClCompile Include="source\WindowHandler\WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\WindowHandler\Components\Menu.hpp" />
     <ClInclude Include="source\WindowHandler\Components\GameView.hpp" />
     <ClInclude Include="source\WindowHandler\Components\FpsBar.hpp" />
     <ClInclude Include="source\Game\Field\GemsField.hpp" />
     <ClInclude Include="source\Game\Game.hpp" />
     <ClInclude Include="source\Game\Field\Gem.hpp" />
     <ClInclude Include="source\WindowHandler\WindowHandler.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="game.conf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
