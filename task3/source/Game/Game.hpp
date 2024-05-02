@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 #include <chrono>
+#include <random>
 
 #include "Field/GemsField.hpp"
 
@@ -30,6 +31,9 @@ class Game {
 	std::chrono::high_resolution_clock timer;
 	std::chrono::steady_clock::time_point currentTime;
 	std::chrono::milliseconds deltaTime{500};
+
+	std::random_device dev;
+	std::mt19937 rng;
 
 	static bool pointAdjacent(int x1, int y1, int x2, int y2);
 

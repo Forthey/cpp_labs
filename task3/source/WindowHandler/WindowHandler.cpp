@@ -1,7 +1,5 @@
 #include "WindowHandler.hpp"
 
-#include <iostream>
-
 
 WindowHandler::WindowHandler(sf::RenderWindow& window) : 
 	window(window), 

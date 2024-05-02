@@ -18,9 +18,6 @@
     <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Game\Field\Gem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Game\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -1,16 +1,17 @@
 #include "Game.hpp"
 
-#include <algorithm>
 #include <iostream>
 #include <format>
 
 
-void Game::procBonuses(std::vector<GemPathWithType> const& removedPoints)
-{
+void Game::procBonuses(std::vector<GemPathWithType> const& removedPoints) {
+	std::uniform_real_distribution<float> distProcChance(0.0f, 1.0f);
+	std::uniform_int_distribution<std::mt19937::result_type> distProcType(0, 1);
+
 	for (auto& removedPath : removedPoints) {
 		for (auto& removedPoint : removedPath.path) {
-			if ((float)(rand() % 10) / 10.0f < bonusProcChance) {
-				switch (rand() % 2) {
+			if (distProcChance(rng) < bonusProcChance) {
+				switch (distProcType(rng)) {
 				case 0:
 					std::cout << "Recolor!!!" << std::endl;
 					doRecolorBonus(removedPoint, removedPath.type);
@@ -32,8 +33,7 @@ inline bool locatedNearby(Point const& point1, Point const& point2) {
 }
 
 
-void Game::doRecolorBonus(Point const& point, GemType type)
-{
+void Game::doRecolorBonus(Point const& point, GemType type) {
 	std::vector<Point> vicinity;
 
 	int yMin = std::max(point.y - vicinityRadius, 0);
@@ -51,7 +51,8 @@ void Game::doRecolorBonus(Point const& point, GemType type)
 	}
 
 	for (int i = 0; i < recolorGemCnt && vicinity.size() != 0; i++) {
-		Point point = vicinity[rand() % vicinity.size()];
+		std::uniform_int_distribution<std::mt19937::result_type> dist(0, int(vicinity.size()) - 1);
+		Point point = vicinity[dist(rng)];
 		for (auto iter = vicinity.begin(); iter != vicinity.end();) {
 			if (locatedNearby(*iter, point)) {
 				iter = vicinity.erase(iter);
@@ -68,11 +69,12 @@ void Game::doRecolorBonus(Point const& point, GemType type)
 }
 
 
-void Game::doBombBonus(Point const& point)
-{
+void Game::doBombBonus(Point const& point) {
+	std::uniform_int_distribution<std::mt19937::result_type> distX(0, field->getFieldSize().x - 1);
+	std::uniform_int_distribution<std::mt19937::result_type> distY(0, field->getFieldSize().y - 1);
 	for (int i = 0; i < 5; i++) {
-		int x = rand() % field->getFieldSize().x;
-		int y = rand() % field->getFieldSize().y;
+		int x = distX(rng);
+		int y = distY(rng);
 
 		std::cout << std::format("Blowed up ({}, {})\n", x, y);
 		field->at({ x, y }) = Gem(GemType::NONE);

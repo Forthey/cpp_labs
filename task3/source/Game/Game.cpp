@@ -1,23 +1,20 @@
 ﻿#include "Game.hpp"
 
 #include <stdexcept>
-#include <algorithm>
 #include <ranges>
 #include <format>
 #include <iostream>
-#include <algorithm>
 #include <queue>
-#include <thread>
 
 
-
-Game::Game(int width, int height)
-{
+Game::Game(int width, int height) : rng(dev()) {
 	if (width == 0 || height == 0) {
 		throw std::runtime_error("Игровое поле не может быть пустым");
 	}
 
-	std::function<GemType(FieldSize)> gen = [](FieldSize fieldSize) { return GemType(rand() % int(GemType::NONE)); };
+	std::uniform_int_distribution<std::mt19937::result_type> dist(0, int(GemType::NONE) - 1); 
+
+	std::function<GemType(FieldSize)> gen = [&dist, this](FieldSize fieldSize) { return GemType(dist(this->rng)); };
 	FieldSize fieldSize = { width, height };
 
 	field = std::make_unique<GemsField>(fieldSize, gen);
@@ -26,14 +23,12 @@ Game::Game(int width, int height)
 }
 
 
-GemsField const& Game::getGemsField()
-{
+GemsField const& Game::getGemsField() {
 	return *field;
 }
 
 
-bool Game::pointAdjacent(int x1, int y1, int x2, int y2)
-{
+bool Game::pointAdjacent(int x1, int y1, int x2, int y2) {
 	if (abs(x1 - x2) == 1 && y1 - y2 == 0) {
 		return true;
 	}
@@ -44,8 +39,7 @@ bool Game::pointAdjacent(int x1, int y1, int x2, int y2)
 }
 
 
-void Game::buildDuplSequence(std::vector<Point>& points, Point const& startPoint)
-{
+void Game::buildDuplSequence(std::vector<Point>& points, Point const& startPoint) {
 	std::unordered_map<long long, char> visited;
 	std::queue<Point> queue;
 	GemType searchType = field->at(startPoint).getType();
@@ -78,8 +72,7 @@ void Game::buildDuplSequence(std::vector<Point>& points, Point const& startPoint
 }
 
 
-void Game::removeDuplicates(Point const& startPoint, std::vector<Point>& removedPoints)
-{
+void Game::removeDuplicates(Point const& startPoint, std::vector<Point>& removedPoints) {
 	std::vector<Point> points;
 	buildDuplSequence(points, startPoint);
 
@@ -97,8 +90,7 @@ void Game::removeDuplicates(Point const& startPoint, std::vector<Point>& removed
 }
 
 
-void Game::shiftGems()
-{
+void Game::shiftGems() {
 	for (int y = field->getFieldSize().y - 1; y >= 0; y--) {
 		for (int x = 0; x < field->getFieldSize().x; x++) {
 			if (field->at(x, y).getType() == GemType::NONE) {
@@ -124,8 +116,7 @@ void Game::shiftGems()
 }
 
 
-void Game::step()
-{
+void Game::step() {
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(timer.now() - currentTime) < deltaTime) {
 		return;
 	}
@@ -152,13 +143,11 @@ void Game::step()
 	}
 }
 
-void Game::onClick(Point const& point)
-{
+void Game::onClick(Point const& point) {
 	onClick(point.x, point.y);
 }
 
-void Game::onClick(int x, int y)
-{
+void Game::onClick(int x, int y) {
 	if (y < 0 || y >= field->getFieldSize().y || 
 		x < 0 || x >= field->getFieldSize().x || 
 		field->at(x, y).getType() == GemType::NONE) {

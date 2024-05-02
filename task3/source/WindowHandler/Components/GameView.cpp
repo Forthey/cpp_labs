@@ -53,7 +53,8 @@ void GameView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 				continue;
 			}
 
-			sf::CircleShape circle(gemViewSize / 2);
+			sf::RectangleShape rectangle({gemViewSize * 0.9f, gemViewSize * 0.9f});
+			//sf::CircleShape circle(gemViewSize / 2);
 			sf::Color gemColor = gemTypeToColor.at(gem.getType());
 
 			if (gem.getFocus()) {
@@ -63,20 +64,28 @@ void GameView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 					sf::Uint8(std::min(255, gemColor.b + 150))
 				);
 
-				circle.setFillColor(focusedColor);
+				//circle.setFillColor(focusedColor);
+				rectangle.setFillColor(focusedColor);
 			}
 			else {
-				circle.setFillColor(gemTypeToColor.at(gem.getType()));
+				//circle.setFillColor(gemTypeToColor.at(gem.getType()));
+				rectangle.setFillColor(gemTypeToColor.at(gem.getType()));
 			}
-			circle.setPosition(transformGame({ x, y }));
+			//circle.setPosition(transformGame({ x, y }));
+			rectangle.setPosition(transformGame({ x, y }));
 
-			target.draw(circle);
+			//target.draw(circle);
+			target.draw(rectangle);
 		}
 	}
 }
 
 sf::Vector2i GameView::readParamsFromConf() {
 	std::ifstream config("game.conf");
+	if (!config.is_open()) {
+		return { 0, 0 };
+	}
+
 	char ch;
 	int width = -1, height = -1;
 

@@ -1,7 +1,6 @@
 #include "FpsBar.hpp"
 
 #include <format>
-#include <iostream>
 
 
 FpsBar::FpsBar(sf::Vector2u const& windowSize)
@@ -21,7 +20,7 @@ void FpsBar::update()
 	frames++;
 	std::chrono::milliseconds deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(timer.now() - currentTime);
 	if (deltaTime > std::chrono::milliseconds{1000}) {
-		fps = 1000 * frames / deltaTime.count();
+		fps = 1000.0f * frames / deltaTime.count();
 		frames = 0;
 		currentTime = timer.now();
 

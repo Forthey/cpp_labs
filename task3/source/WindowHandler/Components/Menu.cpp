@@ -1,8 +1,5 @@
 #include "Menu.hpp"
 
-#include <iostream>
-#include <format>
-
 
 Menu::Menu(sf::Vector2u const& windowSize) : menuRect({menuFill.x * windowSize.x, menuFill.y * windowSize.y}) {
 
