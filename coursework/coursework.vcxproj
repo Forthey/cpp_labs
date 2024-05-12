@@ -144,10 +144,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\Game\Arkanoid.cpp" />
+    <ClCompile Include="source\Game\Components\Block.hpp" />
+    <ClCompile Include="source\Game\utility.hpp" />
     <ClCompile Include="source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Game\Arkanoid.hpp" />
+    <ClInclude Include="source\Game\Components\Ball.hpp" />
+    <ClInclude Include="source\Game\Components\Slider.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
