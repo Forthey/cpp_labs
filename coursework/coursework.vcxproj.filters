@@ -21,10 +21,19 @@
     <ClCompile Include="source\Game\Arkanoid.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="source\Game\utility.hpp">
+    <ClCompile Include="source\WindowHandler.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="source\Game\Components\Block.hpp">
+    <ClCompile Include="source\Game\Components\Ball\Ball.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Game\Components\Slider\Slider.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Game\Components\Block\Block.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Game\Components\Block\Blocks.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,10 +41,19 @@
     <ClInclude Include="source\Game\Arkanoid.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\Game\Components\Ball.hpp">
+    <ClInclude Include="source\Game\Components\Ball\Ball.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="source\Game\Components\Slider.hpp">
+    <ClInclude Include="source\Game\Components\Slider\Slider.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\WindowHandler.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Game\Components\Block\Blocks.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Game\Components\Block\Block.hpp">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

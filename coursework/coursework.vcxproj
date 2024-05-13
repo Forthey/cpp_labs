@@ -144,14 +144,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\Game\Arkanoid.cpp" />
-    <ClCompile Include="source\Game\Components\Block.hpp" />
-    <ClCompile Include="source\Game\utility.hpp" />
+    <ClCompile Include="source\Game\Components\Ball\Ball.cpp" />
+    <ClCompile Include="source\Game\Components\Block\Block.cpp" />
+    <ClCompile Include="source\Game\Components\Block\Blocks.cpp" />
+    <ClCompile Include="source\Game\Components\Slider\Slider.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Game\Arkanoid.hpp" />
-    <ClInclude Include="source\Game\Components\Ball.hpp" />
-    <ClInclude Include="source\Game\Components\Slider.hpp" />
+    <ClInclude Include="source\Game\Components\Ball\Ball.hpp" />
+    <ClInclude Include="source\Game\Components\Block\Block.hpp" />
+    <ClInclude Include="source\Game\Components\Block\Blocks.hpp" />
+    <ClInclude Include="source\Game\Components\Slider\Slider.hpp" />
+    <ClInclude Include="source\WindowHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
