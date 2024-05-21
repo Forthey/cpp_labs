@@ -37,7 +37,8 @@ void WindowHandler::runMainLoop()
 			}
 		}
 
-		arkanoid->update(sf::Mouse::getPosition(*window).x);
+		float mousePosX = sf::Mouse::getPosition(*window).x;
+		arkanoid->update(mousePosX);
 
 		window->draw(*arkanoid);
 		window->display();

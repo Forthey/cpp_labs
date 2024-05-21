@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "../Object.hpp"
 
 
 enum class BlockType {
@@ -13,17 +13,10 @@ enum class BlockType {
 };
 
 
-class Block : public sf::Drawable {
+class Block : public Object {
     int lifePoints;
     BlockType type;
-    sf::Vector2f pos;
-
-    sf::RectangleShape block;
-
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
     Block(sf::Vector2f const& pos, float const size, int const lifePoints, BlockType const type);
     bool hit();
-
-    sf::Vector2f const& getPos() const { return pos; }
 };

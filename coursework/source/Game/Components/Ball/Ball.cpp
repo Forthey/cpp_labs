@@ -3,61 +3,74 @@
 
 #include <ranges>
 
-Ball::Ball(sf::Vector2u const& windowSize) : pos(windowSize.x * 0.5f, windowSize.y * 0.7f), speed(windowSize.x * 0.1f, windowSize.y * 0.2f), ball(windowSize.x / 200.0f, 50) {
-    ball.setPosition({ pos.x - ball.getRadius(), pos.y});
-}
-
-void Ball::inverseX() {
-    speed.x = -speed.x;
-    move(0.01f);
-}
-
-void Ball::inverseY() {
-    speed.y = -speed.y;
-    move(0.01f);
-}
-
-void Ball::move(float const dt) {
-    pos.x += speed.x * dt;
-    pos.y += speed.y * dt;
-
-    ball.setPosition({ pos.x - ball.getRadius(), pos.y });
+Ball::Ball(sf::Vector2u const& windowSize) : MoveableObject("ball.png", { windowSize.x / 50.0f, windowSize.x / 50.0f }, { windowSize.x * 0.5f, windowSize.y * 0.7f }, { windowSize.x * 0.2f, windowSize.y * 0.4f }) {
 }
 
 bool Ball::ceilCollided(sf::Vector2u const& windowSize) {
-    return pos.y - ball.getRadius() <= 0;
+    return getPos().y <= 0;
 }
 
 bool Ball::floorCollided(sf::Vector2u const& windowSize) {
-    return pos.y + ball.getRadius() >= windowSize.y;
+    return getPos().y + getSize().y >= windowSize.y;
 }
 
 bool Ball::wallsCollided(sf::Vector2u const& windowSize) {
-    return pos.x - ball.getRadius() <= 0 || pos.x + ball.getRadius() >= windowSize.x;
-}
-
-bool Ball::topBottomCollided(sf::Vector2f const& blockPos, float const size) {
-    return
-        pos.y + ball.getRadius() > blockPos.y &&
-        pos.y - ball.getRadius() < blockPos.y + size &&
-        blockPos.x < pos.x && pos.x < blockPos.x + size;
-}
-
-bool Ball::leftRightCollided(sf::Vector2f const& blockPos, float const size) {
-    return
-        pos.x + ball.getRadius() > blockPos.x && 
-        pos.x - ball.getRadius() < blockPos.x + size &&
-        blockPos.y < pos.y && pos.y < blockPos.y + size;
-}
-
-bool Ball::sliderCollided(sf::Vector2f const& sliderPos, sf::Vector2f const& sliderSize) {
-    return
-        sliderPos.y - sliderSize.y / 2.0f < pos.y + ball.getRadius() && pos.y - ball.getRadius() < sliderPos.y + sliderSize.y / 2.0f && 
-        sliderPos.x - sliderSize.x / 2.0f < pos.x && pos.x < sliderPos.x + sliderSize.x / 2.0f;
+    return getPos().x - getSize().x <= 0 || getPos().x + getSize().x >= windowSize.x;
 }
 
 
+BallCollisionResult Ball::checkCollisions(Blocks& blocks, Slider const& slider, sf::Vector2u const& windowSize) {
+    switch (checkCollision(slider.getPos(), slider.getSize()))
+    {
+    case CollisionResult::LEFT:
+    case CollisionResult::RIGHT:
+        return BallCollisionResult::SLIDER;
+        break;
+    case CollisionResult::TOP:
+    case CollisionResult::BOTTOM:
+        changeSpeed({ slider.getSpeed() / 3.0f, 0.0f });
+        return BallCollisionResult::SLIDER;
+        break;
+    case CollisionResult::NONE:
+        break;
+    }
 
-void Ball::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    target.draw(ball);
+    // Ceil
+    if (checkCollision({ 0.0f, -100.0f }, { (float)windowSize.x, 100.0f }) != CollisionResult::NONE) {
+        return BallCollisionResult::CEIL;
+    }
+    // Floor 
+    if (checkCollision({ 0.0f, (float)windowSize.y }, { (float)windowSize.x, 100.0f }) != CollisionResult::NONE) {
+        return BallCollisionResult::FLOOR;
+    }
+    // WALLS
+    if (checkCollision({ -100.0f, 0.0f }, { 100.0f, (float)windowSize.y }) != CollisionResult::NONE) {
+        return BallCollisionResult::WALLS;
+    }
+    if (checkCollision({ (float)windowSize.x, 0.0f }, { 100.0f, (float)windowSize.y }) != CollisionResult::NONE) {
+        return BallCollisionResult::WALLS;
+    }
+
+    for (auto block = blocks.getBlocks().begin(); block != blocks.getBlocks().end(); ++block) {
+        switch (checkCollision((*block)->getPos(), { blocks.getBlockSize(), blocks.getBlockSize() })) {
+        case CollisionResult::LEFT:
+        case CollisionResult::RIGHT:
+            if ((*block)->hit()) {
+                block = blocks.getBlocks().erase(block);
+            }
+            return BallCollisionResult::BLOCK_HORIZONTAL;
+            break;
+        case CollisionResult::TOP:
+        case CollisionResult::BOTTOM:
+            if ((*block)->hit()) {
+                block = blocks.getBlocks().erase(block);
+            }
+            return BallCollisionResult::BLOCK_VERTICAL;
+            break;
+        case CollisionResult::NONE:
+            break;
+        }
+    }
+
+    return BallCollisionResult::CEIL;
 }

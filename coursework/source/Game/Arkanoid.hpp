@@ -10,7 +10,7 @@
 
 class Arkanoid : public sf::Drawable {
     Blocks blocks;
-    std::vector<Ball> balls;
+    std::list<Ball> balls;
     std::unique_ptr<Slider> slider;
 
     sf::Vector2u windowSize;
@@ -19,8 +19,6 @@ class Arkanoid : public sf::Drawable {
 
     std::chrono::high_resolution_clock timer;
     std::chrono::steady_clock::time_point currentTime;
-
-    void checkCollision(Ball& ball, Blocks& blocks, Slider const& slider, sf::Vector2u const& windowSize);
 public:
     Arkanoid(sf::Vector2u const& windowSize);
 

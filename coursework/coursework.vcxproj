@@ -143,6 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\Game\Components\MoveableObject.cpp" />
+    <ClCompile Include="source\Game\Components\Object.cpp" />
     <ClCompile Include="source\Game\Arkanoid.cpp" />
     <ClCompile Include="source\Game\Components\Ball\Ball.cpp" />
     <ClCompile Include="source\Game\Components\Block\Block.cpp" />
@@ -152,6 +154,8 @@
     <ClCompile Include="source\WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Game\Components\MoveableObject.hpp" />
+    <ClInclude Include="source\Game\Components\Object.hpp" />
     <ClInclude Include="source\Game\Arkanoid.hpp" />
     <ClInclude Include="source\Game\Components\Ball\Ball.hpp" />
     <ClInclude Include="source\Game\Components\Block\Block.hpp" />

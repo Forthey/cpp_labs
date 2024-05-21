@@ -1,5 +1,6 @@
 #include <unordered_map>
 #include <fstream>
+#include <iostream>
 
 #include "Block.hpp"
 #include "Blocks.hpp"
@@ -38,14 +39,14 @@ Blocks::Blocks(sf::Vector2u const& windowSize, std::string const& dataFileName) 
                 continue;
             }
             currentPos = { defaultPadding.x + x * blockSize, defaultPadding.y + y * blockSize };
-            blocks.push_back(Block(currentPos, blockSize, 1, codeToType.at(code)));
+            blocks.emplace_back(std::make_unique<Block>(currentPos, blockSize, 1, codeToType.at(code)));
         }
     }
 }
 
 void Blocks::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    for (Block const& block : blocks) {
-        target.draw(block);
+    for (auto const& block : blocks) {
+        target.draw(*block);
     }
 }

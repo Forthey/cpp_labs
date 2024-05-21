@@ -1,18 +1,18 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "../MoveableObject.hpp"
 
-class Slider : public sf::Drawable {
-    sf::Vector2f size;
-    sf::Vector2f pos;
 
-    sf::RectangleShape rect;
+class Slider : public Object {
+    float avgSpeed = 0.0f;
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    float cachedIntervalLength = 0.0f;
+    float const speedEvalIntervalSeconds = 0.1f;
+    float deltaTime = 0.0f;
 public:
     Slider(sf::Vector2u const& windowSize);
+    void setPosX(float const newX, float const dt);
 
-    sf::Vector2f const& getPos() const { return pos; }
-    sf::Vector2f const& getSize() const { return size; }
-    void setPosX(float newX);
+    float const getSpeed() const { return avgSpeed; }
 };

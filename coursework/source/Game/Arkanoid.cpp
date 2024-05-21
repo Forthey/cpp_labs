@@ -10,58 +10,17 @@ Arkanoid::Arkanoid(sf::Vector2u const& windowSize) : windowSize(windowSize), blo
     currentTime = timer.now();
 }
 
-
-void Arkanoid::checkCollision(Ball& ball, Blocks& blocks, Slider const& slider, sf::Vector2u const& windowSize)
-{
-    if (ball.sliderCollided(slider.getPos(), slider.getSize())) {
-        ball.inverseY();
-        return;
-    }
-
-    if (ball.ceilCollided(windowSize)) {
-        ball.inverseY();
-        return;
-    }
-
-    if (ball.wallsCollided(windowSize)) {
-        ball.inverseX();
-        return;
-    }
-
-    if (ball.floorCollided(windowSize)) {
-        // TODO потеря очков
-        ball.inverseY();
-        return;
-    }
-
-    for (auto block = blocks.getBlocks().begin(); block != blocks.getBlocks().end(); ++block) {
-        if (ball.topBottomCollided(block->getPos(), blocks.getBlockSize())) {
-            ball.inverseY();
-            if (block->hit()) {
-                block = blocks.getBlocks().erase(block);
-            }
-            break;
-        }
-
-        if (ball.leftRightCollided(block->getPos(), blocks.getBlockSize())) {
-            ball.inverseX();
-            if (block->hit()) {
-                block = blocks.getBlocks().erase(block);
-            }
-            break;
-        }
-    }
-}
-
 void Arkanoid::update(float const x)
 {
     float const dt = std::chrono::duration_cast<std::chrono::milliseconds>(timer.now() - currentTime).count() / 1000.0f;
     currentTime = timer.now();
 
-    slider->setPosX(x);
+    if (x >= slider->getSize().x && x < windowSize.x - slider->getSize().x) {
+        slider->setPosX(x, dt);
+    }
     for (Ball& ball : balls) {
         ball.move(dt);
-        checkCollision(ball, blocks, *slider, windowSize);
+        ball.checkCollisions(blocks, *slider, windowSize);
     }
 }
 
