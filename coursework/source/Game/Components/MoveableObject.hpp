@@ -12,17 +12,16 @@ enum class CollisionResult {
 
 
 class MoveableObject : public Object {
-private:
-    sf::Vector2f speed;
+    static float const maxSpeed;
 
-    void inverseY() { speed.y = -speed.y; }
-    void inverseX() { speed.x = -speed.x; }
+    sf::Vector2f speed;
 public:
     MoveableObject(std::string const& textureName, sf::Vector2f const& size, sf::Vector2f const& pos, sf::Vector2f const& speed);
 
-    void move(float const dt);
-    void changeSpeed(sf::Vector2f const& dv) { speed.x += dv.x, speed.y += dv.y; }
+    virtual void move(float const dt);
+    bool wentOutOfField(sf::Vector2u fieldSize) const;
 
-    CollisionResult checkCollision(sf::Vector2f const& pos, sf::Vector2f const& size);
+    void setSpeed(sf::Vector2f const& newSpeed);
+    sf::Vector2f const& getSpeed() const;
+    void changeSpeed(sf::Vector2f const& dv);
 };
-

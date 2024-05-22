@@ -1,76 +1,144 @@
 #include "Ball.hpp"
 #include <iostream>
 
-#include <ranges>
 
-Ball::Ball(sf::Vector2u const& windowSize) : MoveableObject("ball.png", { windowSize.x / 50.0f, windowSize.x / 50.0f }, { windowSize.x * 0.5f, windowSize.y * 0.7f }, { windowSize.x * 0.2f, windowSize.y * 0.4f }) {
+Ball::Ball(sf::Vector2u const& windowSize) :
+    CollideableObject(
+        "ball.png", 
+        { windowSize.x / 50.0f, windowSize.x / 50.0f }, 
+        { windowSize.x * 0.5f, windowSize.y * 0.7f }, 
+        { windowSize.x * 0.2f, windowSize.y * 0.4f }
+    ), defaultSpeed({ std::abs(getSpeed().x), std::abs(getSpeed().y) }),
+    decreaseDiffSpeed(getSpeed().x * 0.25f, getSpeed().y * 0.25f) {
 }
 
-bool Ball::ceilCollided(sf::Vector2u const& windowSize) {
-    return getPos().y <= 0;
+Ball::Ball(sf::Vector2u const& windowSize, sf::Vector2f const& pos, sf::Vector2f const& speed) : 
+    CollideableObject(
+    "ball.png",
+        { windowSize.x / 50.0f, windowSize.x / 50.0f },
+        pos,
+        speed
+    ), defaultSpeed({ std::abs(getSpeed().x), std::abs(getSpeed().y) }),
+    decreaseDiffSpeed(getSpeed().x * 0.25f, getSpeed().y * 0.25f) {
 }
 
-bool Ball::floorCollided(sf::Vector2u const& windowSize) {
-    return getPos().y + getSize().y >= windowSize.y;
-}
 
-bool Ball::wallsCollided(sf::Vector2u const& windowSize) {
-    return getPos().x - getSize().x <= 0 || getPos().x + getSize().x >= windowSize.x;
-}
-
-
-BallCollisionResult Ball::checkCollisions(Blocks& blocks, Slider const& slider, sf::Vector2u const& windowSize) {
+BallCollisionResult Ball::checkCollisions(
+    Blocks& blocks, 
+    std::list<std::unique_ptr<FallingBonus>>& fallingBonuses, 
+    std::list<std::unique_ptr<Ball>>& balls,
+    Slider const& slider, 
+    sf::Vector2u const& windowSize
+) {
     switch (checkCollision(slider.getPos(), slider.getSize()))
     {
     case CollisionResult::LEFT:
     case CollisionResult::RIGHT:
+        changeSpeed({ slider.getSpeed().x, 0.0f });
         return BallCollisionResult::SLIDER;
-        break;
     case CollisionResult::TOP:
     case CollisionResult::BOTTOM:
-        changeSpeed({ slider.getSpeed() / 3.0f, 0.0f });
+        changeSpeed({ slider.getSpeed().x * slider.getStickyness(), 0.0f});
         return BallCollisionResult::SLIDER;
-        break;
     case CollisionResult::NONE:
         break;
     }
 
+    float const rectSize = 10000.0f, rectPadding = 100.0f;
     // Ceil
-    if (checkCollision({ 0.0f, -100.0f }, { (float)windowSize.x, 100.0f }) != CollisionResult::NONE) {
+    if (checkCollision({ -rectPadding, -rectSize }, { (float)windowSize.x + rectPadding, rectSize }) != CollisionResult::NONE) {
         return BallCollisionResult::CEIL;
     }
     // Floor 
-    if (checkCollision({ 0.0f, (float)windowSize.y }, { (float)windowSize.x, 100.0f }) != CollisionResult::NONE) {
+    if (checkCollision({ -rectPadding, (float)windowSize.y }, { (float)windowSize.x + rectPadding, rectSize }) != CollisionResult::NONE) {
         return BallCollisionResult::FLOOR;
     }
     // WALLS
-    if (checkCollision({ -100.0f, 0.0f }, { 100.0f, (float)windowSize.y }) != CollisionResult::NONE) {
+    if (checkCollision({ -rectSize, -rectPadding }, { rectSize, (float)windowSize.y + rectPadding }) != CollisionResult::NONE) {
         return BallCollisionResult::WALLS;
     }
-    if (checkCollision({ (float)windowSize.x, 0.0f }, { 100.0f, (float)windowSize.y }) != CollisionResult::NONE) {
+    if (checkCollision({ (float)windowSize.x, -rectPadding }, { rectSize, (float)windowSize.y + rectPadding }) != CollisionResult::NONE) {
         return BallCollisionResult::WALLS;
     }
 
-    for (auto block = blocks.getBlocks().begin(); block != blocks.getBlocks().end(); ++block) {
-        switch (checkCollision((*block)->getPos(), { blocks.getBlockSize(), blocks.getBlockSize() })) {
+    for (auto& ball : balls) {
+        if (ball->getPos() == getPos()) {
+            continue;
+        }
+        switch (checkCollision(ball->getPos(), ball->getSize())) {
         case CollisionResult::LEFT:
         case CollisionResult::RIGHT:
-            if ((*block)->hit()) {
-                block = blocks.getBlocks().erase(block);
-            }
-            return BallCollisionResult::BLOCK_HORIZONTAL;
-            break;
         case CollisionResult::TOP:
         case CollisionResult::BOTTOM:
-            if ((*block)->hit()) {
+            return BallCollisionResult::BALL;
+            break;
+        }
+    }
+
+    std::shared_ptr<Bonus> hiddenBonus;
+    for (auto block = blocks.getBlocks().begin(); block != blocks.getBlocks().end(); ++block) {
+        CollisionResult result = checkCollision((*block)->getPos(), { blocks.getBlockSize(), blocks.getBlockSize() });
+
+        switch (result) {
+        case CollisionResult::LEFT:
+        case CollisionResult::RIGHT:
+        case CollisionResult::TOP:
+        case CollisionResult::BOTTOM:
+            hiddenBonus = (*block)->hit();       
+            if (hiddenBonus) {
+                switch (hiddenBonus->getType()) {
+                case BonusType::SPEED_INCREASE:
+                    if (result == CollisionResult::LEFT || result == CollisionResult::RIGHT) {
+                        setSpeed({ getSpeed().x * hiddenBonus->getValue(), getSpeed().y });
+                    }
+                    else if (result == CollisionResult::TOP || result == CollisionResult::BOTTOM) {
+                        setSpeed({ getSpeed().x, getSpeed().y * hiddenBonus->getValue() });
+                    }                   
+                    break;
+                default:
+                    fallingBonuses.emplace_back(std::make_unique<FallingBonus>((*block)->getPos(), (*block)->getSize(), windowSize.y / 10.0f, hiddenBonus));
+                    break;
+                }            
+            }
+            if ((*block)->shouldBeDestroyed()) {
                 block = blocks.getBlocks().erase(block);
             }
-            return BallCollisionResult::BLOCK_VERTICAL;
-            break;
+            return BallCollisionResult::BLOCK;
         case CollisionResult::NONE:
             break;
         }
     }
 
-    return BallCollisionResult::CEIL;
+    return BallCollisionResult::NONE;
+}
+
+
+inline int sign(float const x) {
+    if (x > 0.0f) {
+        return 1;
+    }
+    if (x < 0) {
+        return -1;
+    }
+    return 0;
+}
+
+void Ball::move(float const dt)
+{
+    setPos({ getPos().x + getSpeed().x * dt, getPos().y + getSpeed().y * dt});
+
+    sf::Vector2f dv;
+    if (std::abs(getSpeed().x) > defaultSpeed.x) {
+        dv.x += -sign(getSpeed().x) * decreaseDiffSpeed.x * dt;
+    }
+    else {
+        dv.x += sign(getSpeed().x) * decreaseDiffSpeed.x * dt;
+    }
+    if (std::abs(getSpeed().y) > defaultSpeed.y) {
+        dv.y += -sign(getSpeed().x) * decreaseDiffSpeed.y * dt;
+    }
+    else {
+        dv.y += sign(getSpeed().x) * decreaseDiffSpeed.y * dt;
+    }
+    changeSpeed(dv);
 }

@@ -37,7 +37,7 @@ void WindowHandler::runMainLoop()
 			}
 		}
 
-		float mousePosX = sf::Mouse::getPosition(*window).x;
+		float const mousePosX = static_cast<float>(sf::Mouse::getPosition(*window).x);
 		arkanoid->update(mousePosX);
 
 		window->draw(*arkanoid);

@@ -1,15 +1,12 @@
-#include <unordered_map>
-#include <fstream>
-#include <iostream>
-
-#include "Block.hpp"
 #include "Blocks.hpp"
 
+#include <fstream>
+#include <random>
 
-std::unordered_map<char, BlockType> const codeToType = {
-    { 'e', BlockType::EMPTY },
-    { 'd', BlockType::DEFAULT }
-};
+#include "BonusBlock.hpp"
+#include "DefaultBlock.hpp"
+#include "InvulnerableBlock.hpp"
+#include "JellyBlock.hpp"
 
 
 Blocks::Blocks(sf::Vector2u const& windowSize, std::string const& dataFileName) : defaultPadding(windowSize.x / 100.0f, windowSize.y / 100.0f) {
@@ -28,20 +25,53 @@ Blocks::Blocks(sf::Vector2u const& windowSize, std::string const& dataFileName) 
     sf::Vector2f currentPos = defaultPadding;
     char code;
 
+    BonusType randomBonus;
+
+    std::random_device rd;
+    std::mt19937 randomGen(rd());
+    std::uniform_int_distribution<> healthValue(1, 4);
+    std::uniform_real_distribution<float> bonusValue(0.8f, 2.0f);
+    std::uniform_real_distribution<float> bonusDuration(4.0f, 8.0f);
+    std::uniform_int_distribution<> bonusDist(0, int(BonusType::SPEED_INCREASE) - 1);
+
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             if (dataFile.eof()) {
                 blocks.clear();
                 return;
             }
-            dataFile >> code;
-            if (codeToType.at(code) == BlockType::EMPTY) {
-                continue;
-            }
+
             currentPos = { defaultPadding.x + x * blockSize, defaultPadding.y + y * blockSize };
-            blocks.emplace_back(std::make_unique<Block>(currentPos, blockSize, 1, codeToType.at(code)));
+
+            dataFile >> code;
+            switch (code) {
+            case 'e':
+                break;
+            case 'd':
+                blocks.emplace_back(std::make_unique<DefaultBlock>(blockSize, currentPos, healthValue(randomGen)));
+                break;
+            case 'b':
+                randomBonus = BonusType(bonusDist(randomGen));
+                blocks.emplace_back(std::make_unique<BonusBlock>(
+                    blockSize, 
+                    currentPos, 
+                    healthValue(randomGen), 
+                    Bonus(randomBonus, bonusValue(randomGen), bonusDuration(randomGen))
+                ));
+                break;
+            case 'i':
+                blocks.emplace_back(std::make_unique<InvulnerableBlock>(blockSize, currentPos));
+                break;
+            case 'j':
+                blocks.emplace_back(std::make_unique<JellyBlock>(blockSize, currentPos, bonusValue(randomGen)));
+                break;
+            default:
+                blocks.clear();
+                return;
+            }
         }
     }
+
 }
 
 void Blocks::draw(sf::RenderTarget& target, sf::RenderStates states) const

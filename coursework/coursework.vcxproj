@@ -143,25 +143,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\Game\Components\MoveableObject.cpp" />
+    <ClCompile Include="source\Game\Components\Floor\Floor.cpp" />
+    <ClCompile Include="source\Game\Components\Score\Score.cpp" />
+    <ClCompile Include="source\Game\Components\CollideableObject.cpp" />
     <ClCompile Include="source\Game\Components\Object.cpp" />
     <ClCompile Include="source\Game\Arkanoid.cpp" />
     <ClCompile Include="source\Game\Components\Ball\Ball.cpp" />
-    <ClCompile Include="source\Game\Components\Block\Block.cpp" />
     <ClCompile Include="source\Game\Components\Block\Blocks.cpp" />
+    <ClCompile Include="source\Game\Components\MoveableObject.cpp" />
     <ClCompile Include="source\Game\Components\Slider\Slider.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\WindowHandler.cpp" />
+    <ClCompile Include="source\Game\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Game\Components\Floor\Floor.hpp" />
+    <ClInclude Include="source\Game\Components\Score\Score.hpp" />
+    <ClInclude Include="source\Game\Components\Block\InvulnerableBlock.hpp" />
+    <ClInclude Include="source\Game\Components\Block\DefaultBlock.hpp" />
+    <ClInclude Include="source\Game\Components\Block\JellyBlock.hpp" />
+    <ClInclude Include="source\Game\Components\Bonus\FallingBonus.hpp" />
+    <ClInclude Include="source\Game\Components\CollideableObject.hpp" />
+    <ClInclude Include="source\Game\Components\Bonus\Bonus.hpp" />
+    <ClInclude Include="source\Game\Components\Block\BaseBlock.hpp" />
     <ClInclude Include="source\Game\Components\MoveableObject.hpp" />
     <ClInclude Include="source\Game\Components\Object.hpp" />
     <ClInclude Include="source\Game\Arkanoid.hpp" />
     <ClInclude Include="source\Game\Components\Ball\Ball.hpp" />
-    <ClInclude Include="source\Game\Components\Block\Block.hpp" />
+    <ClInclude Include="source\Game\Components\Block\BonusBlock.hpp" />
     <ClInclude Include="source\Game\Components\Block\Blocks.hpp" />
     <ClInclude Include="source\Game\Components\Slider\Slider.hpp" />
     <ClInclude Include="source\WindowHandler.hpp" />
+    <ClInclude Include="source\Game\TextureManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
