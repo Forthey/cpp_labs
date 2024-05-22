@@ -15,6 +15,7 @@
 
 class Arkanoid : public sf::Drawable {
     sf::Vector2u windowSize;
+    bool isPaused = false;
 
     std::unique_ptr<Blocks> blocks;
 
@@ -42,7 +43,8 @@ class Arkanoid : public sf::Drawable {
 public:
     Arkanoid(sf::Vector2u const& windowSize);
 
+    void pause();
+    void start();
+    void switchState();
     void update(float const x);
-
-    ~Arkanoid();
 };

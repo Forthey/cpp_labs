@@ -6,7 +6,7 @@
 Arkanoid::Arkanoid(sf::Vector2u const& windowSize) :
     windowSize(windowSize)
 {
-    TextureManager::load();
+    TextureManager::reload();
 
     blocks = std::make_unique<Blocks>(windowSize, "levels/test.arknd");
     slider = std::make_unique<Slider>(windowSize);
@@ -17,9 +17,31 @@ Arkanoid::Arkanoid(sf::Vector2u const& windowSize) :
     currentTime = timer.now();
 }
 
+void Arkanoid::pause() {
+    isPaused = true;
+}
+
+void Arkanoid::start() {
+    isPaused = false;
+    currentTime = timer.now();
+}
+
+void Arkanoid::switchState() {
+    if (isPaused) {
+        start();
+    }
+    else {
+        pause();
+    }
+}
+
 
 void Arkanoid::update(float const x)
 {
+    if (isPaused) {
+        return;
+    }
+
     float const dt = std::chrono::duration_cast<std::chrono::milliseconds>(timer.now() - currentTime).count() / 1000.0f;
     currentTime = timer.now();
 
@@ -31,11 +53,6 @@ void Arkanoid::update(float const x)
     updateActiveBonuses(dt);
     updateBalls(dt);
 }
-
-Arkanoid::~Arkanoid() {
-    TextureManager::clear();
-}
-
 
 void Arkanoid::updateFallingBonuses(float const dt) {
     for (auto bonus = fallingBonuses.begin(); bonus != fallingBonuses.end(); ++bonus) {
