@@ -1,0 +1,6 @@
+*.exe
+x64
+.vs
+dependencies/SFML-2.6.1
+*.dll
+*.pdb
