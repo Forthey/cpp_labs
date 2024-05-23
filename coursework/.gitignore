@@ -1,0 +1,11 @@
+# .vs directory
+.vs
+# Executable files
+x64
+*.exe
+*.pdb
+# SFML files
+*.dll
+dependencies/SFML-2.6.1
+# Ptoject user file
+*.user
