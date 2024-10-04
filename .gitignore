@@ -1,3 +1,12 @@
+# Clion
 .idea
 cmake-build-debug*
 *.exe
+
+# Visual studio
+*.gdb
+Build
+Debug
+Release
+.vs
+**/*vcxproj.user
