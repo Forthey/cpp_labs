@@ -13,8 +13,10 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SOURCE_FILES
         source/main.cpp
-        source/TokenScanner.cpp
-        source/TokenConverter.cpp
+        source/calculator_logic/TokenScanner.cpp
+        source/calculator_logic/TokenConverter.cpp
+        source/calculator_logic/PolishCalculator.cpp
+        source/tokens/priority_level/PriorityLevelStorage.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
