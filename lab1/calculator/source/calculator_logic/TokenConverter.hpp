@@ -15,8 +15,8 @@ class TokenConverter {
         WAITING_FOR_SUFFIX
     } state;
 
-    std::shared_ptr<std::queue<TokenPtr>> queue;
-    std::unique_ptr<std::stack<OperatorPtr>> stack;
+    std::shared_ptr<std::queue<TokenPtr>> resultTokens;
+    std::unique_ptr<std::stack<OperatorPtr>> operatorsStack;
 
     static std::unordered_map<char, uint8_t> const opPriority;
 

@@ -17,6 +17,8 @@ SET(SOURCE_FILES
         source/calculator_logic/TokenConverter.cpp
         source/calculator_logic/PolishCalculator.cpp
         source/tokens/priority_level/PriorityLevelStorage.cpp
+        source/Calculator.cpp
+        source/Calculator.hpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

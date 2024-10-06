@@ -6,5 +6,5 @@
 
 class PolishCalculator {
 public:
-    static void calculate(std::queue<TokenPtr> const& tokens);
+    static double calculate(std::queue<TokenPtr>& tokens);
 };
