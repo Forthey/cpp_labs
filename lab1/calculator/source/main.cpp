@@ -14,8 +14,11 @@ int main() {
     try {
         std::cout << std::format("{} = {}\n", exprStr, Calculator::calculate(exprStr));
     } catch (std::exception& exception) {
+        FuncLoader::freeFuncs();
         std::cout << exception.what() << std::endl;
         return 1;
     }
+
+    FuncLoader::freeFuncs();
 	return 0;
 }

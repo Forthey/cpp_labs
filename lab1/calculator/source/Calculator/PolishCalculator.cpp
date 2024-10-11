@@ -8,28 +8,28 @@
 #include "ComputableOperator.hpp"
 
 
-double PolishCalculator::calculate(std::queue<TokenPtr>& tokens) {
-    std::stack<OperandPtr> operandStack;
+double PolishCalculator::calculate(std::queue<Tok::TokenPtr>& tokens) {
+    std::stack<Tok::OperandPtr> operandStack;
 
     while (!tokens.empty()) {
         auto token = tokens.front();
         tokens.pop();
 
-//        if (token->getType() == TokenType::OPERAND)
-//            std::cout << std::format("{} ", std::dynamic_pointer_cast<Operand>(token)->getValue());
-//        else if (token->getType() == TokenType::SUFFIX_OPERATOR)
-//            std::cout << std::format("{} ", std::dynamic_pointer_cast<Operator>(token)->getSymbol());
+//        if (token->getType() == Tok::TokenType::OPERAND)
+//            std::cout << std::format("{} ", std::dynamic_pointer_cast<Tok::Operand>(token)->getValue());
+//        else if (token->getType() == Tok::TokenType::SUFFIX_OPERATOR || token->getType() == Tok::TokenType::PREFIX_OPERATOR)
+//            std::cout << std::format("{} ", std::dynamic_pointer_cast<Tok::Operator>(token)->getName());
 
         switch (token->getType()) {
-            case SUFFIX_OPERATOR:
-            case PREFIX_OPERATOR:
-                std::dynamic_pointer_cast<ComputableOperator>(token)->doCalc(operandStack);
+            case Tok::SUFFIX_OPERATOR:
+            case Tok::PREFIX_OPERATOR:
+                std::dynamic_pointer_cast<Tok::ComputableOperator>(token)->doCalc(operandStack);
                 break;
-            case OPERAND:
-                operandStack.push(std::dynamic_pointer_cast<Operand>(token));
+            case Tok::OPERAND:
+                operandStack.push(std::dynamic_pointer_cast<Tok::Operand>(token));
                 break;
-            case OPENING_PARENTHESIS:
-            case CLOSING_PARENTHESIS:
+            case Tok::OPENING_PARENTHESIS:
+            case Tok::CLOSING_PARENTHESIS:
                 break;
         }
     }

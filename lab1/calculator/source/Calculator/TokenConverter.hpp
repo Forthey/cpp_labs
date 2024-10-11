@@ -15,16 +15,16 @@ class TokenConverter {
         WAITING_FOR_SUFFIX
     } state;
 
-    std::shared_ptr<std::queue<TokenPtr>> resultTokens;
-    std::unique_ptr<std::stack<OperatorPtr>> operatorsStack;
+    std::shared_ptr<std::queue<Tok::TokenPtr>> resultTokens;
+    std::unique_ptr<std::stack<Tok::OperatorPtr>> operatorsStack;
 
     static std::unordered_map<char, uint8_t> const opPriority;
 
-    void dropOperators(OperatorPtr const &op);
+    void dropOperators(Tok::OperatorPtr const &op);
 
-    void parseForPrefix(TokenPtr &token);
+    void parseForPrefix(Tok::TokenPtr &token);
 
-    void parseForSuffix(TokenPtr &token);
+    void parseForSuffix(Tok::TokenPtr &token);
 public:
-    std::shared_ptr<std::queue<TokenPtr>> convert(std::queue<TokenPtr> &tokens);
+    std::shared_ptr<std::queue<Tok::TokenPtr>> convert(std::queue<Tok::TokenPtr> &tokens);
 };

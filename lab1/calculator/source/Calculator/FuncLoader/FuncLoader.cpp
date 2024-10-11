@@ -44,5 +44,5 @@ void FuncLoader::freeFuncs() {
 
 FuncLoader::DllWatcher::~DllWatcher() {
     FreeLibrary(dllHandler);
-    std::cout << "cleared func" << std::endl;
+//    std::cout << "cleared func" << std::endl;
 }

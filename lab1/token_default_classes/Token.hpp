@@ -1,19 +1,24 @@
 #pragma once
+
 #include <memory>
 
-enum TokenType {
-    SUFFIX_OPERATOR = 0,
-    PREFIX_OPERATOR,
-    OPERAND,
-    OPENING_PARENTHESIS,
-    CLOSING_PARENTHESIS
-};
+namespace Tok {
 
-class Token {
-public:
-    [[nodiscard]] virtual TokenType getType() const = 0;
+    enum TokenType {
+        SUFFIX_OPERATOR = 0,
+        PREFIX_OPERATOR,
+        OPERAND,
+        OPENING_PARENTHESIS,
+        CLOSING_PARENTHESIS
+    };
 
-    virtual ~Token() = default;
-};
+    class Token {
+    public:
+        [[nodiscard]] virtual TokenType getType() const = 0;
 
-using TokenPtr = std::shared_ptr<Token>;
+        virtual ~Token() = default;
+    };
+
+    using TokenPtr = std::shared_ptr<Token>;
+
+}

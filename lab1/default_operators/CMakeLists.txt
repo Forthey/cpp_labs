@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.27)
 
 project(default_operators)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 

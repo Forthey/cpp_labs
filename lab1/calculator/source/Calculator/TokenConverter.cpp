@@ -6,20 +6,20 @@
 #include "Parenthesis.hpp"
 
 
-void TokenConverter::dropOperators(OperatorPtr const &op) {
+void TokenConverter::dropOperators(Tok::OperatorPtr const &op) {
     while (!operatorsStack->empty() && *op <= *operatorsStack->top()) {
         resultTokens->push(operatorsStack->top());
         operatorsStack->pop();
     }
 }
 
-void TokenConverter::parseForPrefix(std::shared_ptr<Token> &token) {
-    if (token->getType() == TokenType::OPERAND) {
+void TokenConverter::parseForPrefix(std::shared_ptr<Tok::Token> &token) {
+    if (token->getType() == Tok::TokenType::OPERAND) {
         resultTokens->push(token);
         state = ConvertState::WAITING_FOR_SUFFIX;
     } else {
-        auto opToken = std::dynamic_pointer_cast<Operator>(token);
-        if (opToken->getType() == TokenType::OPENING_PARENTHESIS || opToken->getType() == TokenType::PREFIX_OPERATOR) {
+        auto opToken = std::dynamic_pointer_cast<Tok::Operator>(token);
+        if (opToken->getType() == Tok::TokenType::OPENING_PARENTHESIS || opToken->getType() == Tok::TokenType::PREFIX_OPERATOR) {
             operatorsStack->push(opToken);
         } else {
             throw std::runtime_error(std::format(
@@ -30,31 +30,31 @@ void TokenConverter::parseForPrefix(std::shared_ptr<Token> &token) {
 
 }
 
-void TokenConverter::parseForSuffix(std::shared_ptr<Token> &token) {
-    if (token->getType() == TokenType::OPERAND)
+void TokenConverter::parseForSuffix(std::shared_ptr<Tok::Token> &token) {
+    if (token->getType() == Tok::TokenType::OPERAND)
         throw std::runtime_error("ConvertError: Expected binary operator or \")\", found number");
 
-    auto opToken = std::dynamic_pointer_cast<Operator>(token);
+    auto opToken = std::dynamic_pointer_cast<Tok::Operator>(token);
     dropOperators(opToken);
 
-    if (opToken->getType() == TokenType::OPENING_PARENTHESIS &&
-        (operatorsStack->empty() || operatorsStack->top()->getType() != TokenType::CLOSING_PARENTHESIS))
+    if (opToken->getType() == Tok::TokenType::OPENING_PARENTHESIS &&
+        (operatorsStack->empty() || operatorsStack->top()->getType() != Tok::TokenType::CLOSING_PARENTHESIS))
         throw std::runtime_error("ConvertError: Expected \"(\"");
 
-    if (opToken->getType() == TokenType::CLOSING_PARENTHESIS)
+    if (opToken->getType() == Tok::TokenType::CLOSING_PARENTHESIS)
         operatorsStack->pop();
 
-    if (opToken->getType() != TokenType::CLOSING_PARENTHESIS) {
+    if (opToken->getType() != Tok::TokenType::CLOSING_PARENTHESIS) {
         operatorsStack->push(opToken);
         state = ConvertState::WAITING_FOR_PREFIX;
     }
 }
 
-std::shared_ptr<std::queue<TokenPtr>> TokenConverter::convert(std::queue<TokenPtr> &tokens) {
-    resultTokens = std::make_shared<std::queue<TokenPtr>>();
-    operatorsStack = std::make_unique<std::stack<OperatorPtr>>();
+std::shared_ptr<std::queue<Tok::TokenPtr>> TokenConverter::convert(std::queue<Tok::TokenPtr> &tokens) {
+    resultTokens = std::make_shared<std::queue<Tok::TokenPtr>>();
+    operatorsStack = std::make_unique<std::stack<Tok::OperatorPtr>>();
 
-    std::shared_ptr<Token> token;
+    std::shared_ptr<Tok::Token> token;
     state = ConvertState::WAITING_FOR_PREFIX;
 
     while (true) {
@@ -77,7 +77,7 @@ std::shared_ptr<std::queue<TokenPtr>> TokenConverter::convert(std::queue<TokenPt
         }
     }
 
-    dropOperators(std::make_shared<ClosingParenthesis>());
+    dropOperators(std::make_shared<Tok::ClosingParenthesis>());
     if (!operatorsStack->empty())
         throw std::runtime_error("ConvertError: Expected \")\"");
 

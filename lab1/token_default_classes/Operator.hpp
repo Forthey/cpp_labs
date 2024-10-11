@@ -6,21 +6,25 @@
 #include "Token.hpp"
 
 
-class Operator : public Token {
-protected:
-    std::string const name;
-    std::uint8_t priorityLevel;
+namespace Tok {
 
-    explicit Operator(std::string const &name, std::uint8_t const priorityLevel)
-            : name(name), priorityLevel(priorityLevel) {}
+    class Operator : public Token {
+    protected:
+        std::string const name;
+        std::uint8_t priorityLevel;
 
-public:
-    auto operator<=>(Operator const &op) const {
-        return priorityLevel <=> op.priorityLevel;
-    }
+        explicit Operator(std::string const &name, std::uint8_t const priorityLevel)
+                : name(name), priorityLevel(priorityLevel) {}
 
-    [[nodiscard]] std::string const &getName() const { return name; }
-};
+    public:
+        auto operator<=>(Operator const &op) const {
+            return priorityLevel <=> op.priorityLevel;
+        }
+
+        [[nodiscard]] std::string const &getName() const { return name; }
+    };
 
 
-using OperatorPtr = std::shared_ptr<Operator>;
+    using OperatorPtr = std::shared_ptr<Operator>;
+
+}

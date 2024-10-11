@@ -5,25 +5,28 @@
 #include "ComputableOperator.hpp"
 
 
-class SuffixOperator : public ComputableOperator {
-protected:
-    std::vector<double> getNumbers(std::stack<OperandPtr> &numStack) override {
-        if (numStack.size() < 2ull)
-            throw std::runtime_error("CalcMultiplyError: unexpected end of expression");
+namespace Tok {
 
-        auto rightValue = numStack.top();
-        numStack.pop();
-        auto leftValue = numStack.top();
-        numStack.pop();
+    class SuffixOperator : public ComputableOperator {
+    protected:
+        std::vector<double> getNumbers(std::stack<OperandPtr> &numStack) override {
+            if (numStack.size() < 2ull)
+                throw std::runtime_error("CalcMultiplyError: unexpected end of expression");
 
-        return { leftValue->getValue(), rightValue->getValue() };
-    }
+            auto rightValue = numStack.top();
+            numStack.pop();
+            auto leftValue = numStack.top();
+            numStack.pop();
 
-public:
-    explicit SuffixOperator(std::string const &name, std::uint8_t const priorityLevel,
-                            std::function<double(std::vector<double> const &)> calcFunc)
-            : ComputableOperator(name, priorityLevel, calcFunc) {}
+            return {leftValue->getValue(), rightValue->getValue()};
+        }
 
-    [[nodiscard]] TokenType getType() const override { return TokenType::SUFFIX_OPERATOR; }
-};
+    public:
+        explicit SuffixOperator(std::string const &name, std::uint8_t const priorityLevel,
+                                std::function<double(std::vector<double> const &)> calcFunc)
+                : ComputableOperator(name, priorityLevel, calcFunc) {}
 
+        [[nodiscard]] TokenType getType() const override { return TokenType::SUFFIX_OPERATOR; }
+    };
+
+}

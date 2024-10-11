@@ -4,7 +4,7 @@
 
 
 std::unordered_map<char, DefaultPrefixOperators::opInfo> DefaultPrefixOperators::opSymbolToInfo = {
-        {'-', {4, unaryMinus}},
+        {'-', {7, unaryMinus}},
 };
 
 bool DefaultPrefixOperators::contains(char const opName) {
