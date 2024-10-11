@@ -1,5 +1,5 @@
 #pragma once
-#include "../Token.hpp"
+#include "Token.hpp"
 
 class Operand : public Token {
 public:

@@ -3,7 +3,7 @@
 #include <format>
 #include <iostream>
 
-#include "../tokens/Parenthesis.hpp"
+#include "Parenthesis.hpp"
 
 
 void TokenConverter::dropOperators(OperatorPtr const &op) {
@@ -19,11 +19,11 @@ void TokenConverter::parseForPrefix(std::shared_ptr<Token> &token) {
         state = ConvertState::WAITING_FOR_SUFFIX;
     } else {
         auto opToken = std::dynamic_pointer_cast<Operator>(token);
-        if (opToken->getType() == TokenType::OPENING_PARENTHESIS) {
+        if (opToken->getType() == TokenType::OPENING_PARENTHESIS || opToken->getType() == TokenType::PREFIX_OPERATOR) {
             operatorsStack->push(opToken);
         } else {
             throw std::runtime_error(std::format(
-                    "ConvertError: Expected number or \"(\", found {}", opToken->getSymbol()
+                    "ConvertError: Expected number or \"(\", found {}", opToken->getName()
             ));
         }
     }

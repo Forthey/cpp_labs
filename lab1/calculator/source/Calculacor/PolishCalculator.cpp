@@ -4,8 +4,8 @@
 #include <iostream>
 #include <format>
 
-#include "../tokens/operands/Operand.hpp"
-#include "../tokens/ComputableOperator.hpp"
+#include "Operand.hpp"
+#include "ComputableOperator.hpp"
 
 
 double PolishCalculator::calculate(std::queue<TokenPtr>& tokens) {

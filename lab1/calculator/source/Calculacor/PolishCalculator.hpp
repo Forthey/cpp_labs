@@ -2,7 +2,7 @@
 #include <memory>
 #include <queue>
 
-#include "../tokens/Token.hpp"
+#include "Token.hpp"
 
 class PolishCalculator {
 public:

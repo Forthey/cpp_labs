@@ -5,8 +5,8 @@
 #include <memory>
 #include <unordered_map>
 
-#include "../tokens/Operator.hpp"
-#include "../tokens/suffix_operators/SuffixOperator.hpp"
+#include "Operator.hpp"
+#include "SuffixOperator.hpp"
 
 
 class TokenConverter {

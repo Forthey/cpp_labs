@@ -1,7 +1,8 @@
 #pragma once
 
 #include <stack>
-#include "../ComputableOperator.hpp"
+
+#include "ComputableOperator.hpp"
 
 
 class SuffixOperator : public ComputableOperator {
@@ -15,11 +16,14 @@ protected:
         auto leftValue = numStack.top();
         numStack.pop();
 
-        return {leftValue->getValue(), rightValue->getValue()};
+        return { leftValue->getValue(), rightValue->getValue() };
     }
 
-    explicit SuffixOperator(char const symbol) : ComputableOperator(symbol) {}
 public:
+    explicit SuffixOperator(std::string const &name, std::uint8_t const priorityLevel,
+                            std::function<double(std::vector<double> const &)> calcFunc)
+            : ComputableOperator(name, priorityLevel, calcFunc) {}
+
     [[nodiscard]] TokenType getType() const override { return TokenType::SUFFIX_OPERATOR; }
 };
 
