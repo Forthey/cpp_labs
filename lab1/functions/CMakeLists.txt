@@ -6,12 +6,20 @@ project(functions
         LANGUAGES CXX
 )
 
-set(LIBRARY_OUTPUT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/../out)
+set(LIBRARY_OUTPUT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/../out/funcs)
 
-set(SOURCE_FILES
-        source/Sqrt.cpp
+list(APPEND functions
+        sqrt log
 )
 
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
+foreach(func ${functions})
+    add_library(${func} SHARED source/${func}.cpp)
+    set_target_properties(${func} PROPERTIES SUFFIX ".dll")
+endforeach()
 
-target_include_directories(${PROJECT_NAME} PRIVATE ../token_default_classes)
+#add_custom_command(
+#        TARGET sqrt POST_BUILD
+#        COMMAND ${CMAKE_COMMAND} -E copy
+#        ${CMAKE_CURRENT_SOURCE_DIR}/source/functions.hpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/include/functions.hpp
+#)

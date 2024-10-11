@@ -1,9 +1,12 @@
 #include <iostream>
 #include <format>
 
-#include "Calculacor/Calculator.hpp"
+#include "Calculator/Calculator.hpp"
+#include "Calculator/FuncLoader/FuncLoader.hpp"
 
 int main() {
+    FuncLoader::loadFunctions();
+
     std::string exprStr = "3 + 5 * 6 - (7 + 8)";
     std::cout << "> ";
     std::getline(std::cin, exprStr);
