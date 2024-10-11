@@ -3,21 +3,13 @@
 
 #include "Calculator/Calculator.hpp"
 #include "Calculator/FuncLoader/FuncLoader.hpp"
+#include "CLI.hpp"
+
 
 int main() {
     FuncLoader::loadFunctions();
 
-    std::string exprStr = "3 + 5 * 6 - (7 + 8)";
-    std::cout << "> ";
-    std::getline(std::cin, exprStr);
-
-    try {
-        std::cout << std::format("{} = {}\n", exprStr, Calculator::calculate(exprStr));
-    } catch (std::exception& exception) {
-        FuncLoader::freeFuncs();
-        std::cout << exception.what() << std::endl;
-        return 1;
-    }
+    CLI::startInteraction();
 
     FuncLoader::freeFuncs();
 	return 0;

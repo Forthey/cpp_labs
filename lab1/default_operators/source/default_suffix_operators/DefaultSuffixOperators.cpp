@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <stdexcept>
 
 
 std::unordered_map<char, DefaultSuffixOperators::opInfo> DefaultSuffixOperators::opSymbolToInfo = {
@@ -38,6 +39,8 @@ double DefaultSuffixOperators::multiplication(std::vector<double> const& numbers
 }
 
 double DefaultSuffixOperators::division(std::vector<double> const& numbers) {
+    if (numbers[1] == 0.0)
+        throw std::runtime_error("CalcError: Division by zero");
     return numbers[0] / numbers[1];
 }
 
@@ -46,5 +49,7 @@ double DefaultSuffixOperators::modulo(std::vector<double> const& numbers) {
 }
 
 double DefaultSuffixOperators::power(std::vector<double> const& numbers) {
+    if (numbers[0] < 0.0 && std::abs(static_cast<int>(numbers[1]) - numbers[1]) > 0.0)
+        throw std::runtime_error("CalcError: Exponentiation of a negative number");
     return std::pow(numbers[0], numbers[1]);
 }
