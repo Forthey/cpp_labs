@@ -43,8 +43,9 @@ void TokenConverter::parseForSuffix(std::shared_ptr<Tok::Token> &token) {
 
     if (opToken->getType() == Tok::TokenType::CLOSING_PARENTHESIS)
         operatorsStack->pop();
-
-    if (opToken->getType() != Tok::TokenType::CLOSING_PARENTHESIS) {
+    else if (opToken->getType() == Tok::TokenType::POSTFIX_OPERATOR)
+        resultTokens->push(opToken);
+    else if (opToken->getType() != Tok::TokenType::CLOSING_PARENTHESIS) {
         operatorsStack->push(opToken);
         state = ConvertState::WAITING_FOR_PREFIX;
     }

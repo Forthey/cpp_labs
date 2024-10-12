@@ -5,6 +5,10 @@
 
 #include "SuffixOperator.hpp"
 #include "PrefixOperator.hpp"
+#include "PostfixOperator.hpp"
+#include "DefaultSuffixOperators.hpp"
+#include "DefaultPrefixOperators.hpp"
+#include "DefaultPostfixOperators.hpp"
 #include "FuncLoader/PluginsLoader.hpp"
 #include "Function.hpp"
 
@@ -72,13 +76,60 @@ std::shared_ptr<std::queue<std::shared_ptr<Tok::Token>>> TokenScanner::buildToke
     return tokens;
 }
 
+//template<class DefaultOperators>
+//bool TokenScanner::loadFunction(std::function<double(std::vector<double> const &)>& func, std::uint8_t &priorityLevel,
+//                                Tok::TokenType const opType, char const ch) {
+//    auto chStr = std::string(1, ch);
+//    if (DefaultOperators::contains(ch)) {
+//        func = &DefaultOperators::getCalcFunction(ch);
+//        priorityLevel = DefaultOperators::getPriorityLevel(ch);
+//    } else if (PluginsLoader::contains(chStr, opType)) {
+//        func = &PluginsLoader::getOpFunction(chStr);
+//        priorityLevel = PluginsLoader::getPriorityLevel(chStr);
+//    } else
+//        return false;
+//    return true;
+//}
+
 bool TokenScanner::addOperator(char const ch) noexcept {
+//    std::function<double(std::vector<double> const &)> const* func;
+//    std::uint8_t priorityLevel;
+//    auto chStr = std::string(1, ch);
+//
+//    if (ch == '(')
+//        tokens->emplace(std::make_shared<Tok::OpeningParenthesis>());
+//    else if (ch == ')')
+//        tokens->emplace(std::make_shared<Tok::ClosingParenthesis>());
+//    else if (expectingOp && loadFunction<DefaultPostfixOperators>(func, priorityLevel, Tok::POSTFIX_OPERATOR, ch)) {
+//        tokens->emplace(std::make_shared<Tok::PostfixOperator>(chStr, priorityLevel, *func));
+//        expectingOp = false;
+//    } else if (expectingOp && loadFunction<DefaultSuffixOperators>(func, priorityLevel, Tok::SUFFIX_OPERATOR, ch)) {
+//        tokens->emplace(std::make_shared<Tok::SuffixOperator>(chStr, priorityLevel, *func));
+//    } else if (!expectingOp && loadFunction<DefaultPrefixOperators>(func, priorityLevel, Tok::PREFIX_OPERATOR, ch)) {
+//        tokens->emplace(std::make_shared<Tok::PrefixOperator>(chStr, priorityLevel, *func));
+//    } else
+//        return false;
+//    return true;
     auto chStr = std::string(1, ch);
     if (ch == '(')
         tokens->emplace(std::make_shared<Tok::OpeningParenthesis>());
     else if (ch == ')')
         tokens->emplace(std::make_shared<Tok::ClosingParenthesis>());
     else if (expectingOp &&
+             (DefaultPostfixOperators::contains(ch) || PluginsLoader::contains(chStr, Tok::POSTFIX_OPERATOR))) {
+        std::function<double(std::vector<double> const &)> const *func;
+        std::uint8_t priorityLevel;
+        if (DefaultPostfixOperators::contains(ch)) {
+            func = &DefaultPostfixOperators::getCalcFunction(ch);
+            priorityLevel = DefaultPostfixOperators::getPriorityLevel(ch);
+        } else if (PluginsLoader::contains(chStr, Tok::POSTFIX_OPERATOR)) {
+            func = &PluginsLoader::getOpFunction(chStr);
+            priorityLevel = PluginsLoader::getPriorityLevel(chStr);
+        }
+
+        tokens->emplace(std::make_shared<Tok::PostfixOperator>(chStr, priorityLevel, *func));
+        expectingOp = false;
+    } else if (expectingOp &&
              (DefaultSuffixOperators::contains(ch) || PluginsLoader::contains(chStr, Tok::SUFFIX_OPERATOR))) {
         std::function<double(std::vector<double> const &)> const *func;
         std::uint8_t priorityLevel;

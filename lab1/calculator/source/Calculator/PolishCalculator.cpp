@@ -21,8 +21,9 @@ double PolishCalculator::calculate(std::queue<Tok::TokenPtr>& tokens) {
 //            std::cout << std::format("{} ", std::dynamic_pointer_cast<Tok::Operator>(token)->getName());
 
         switch (token->getType()) {
-            case Tok::SUFFIX_OPERATOR:
             case Tok::PREFIX_OPERATOR:
+            case Tok::SUFFIX_OPERATOR:
+            case Tok::POSTFIX_OPERATOR:
                 std::dynamic_pointer_cast<Tok::ComputableOperator>(token)->doCalc(operandStack);
                 break;
             case Tok::OPERAND:

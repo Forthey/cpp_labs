@@ -7,6 +7,7 @@ namespace Tok {
     enum TokenType {
         SUFFIX_OPERATOR = 0,
         PREFIX_OPERATOR,
+        POSTFIX_OPERATOR,
         OPERAND,
         OPENING_PARENTHESIS,
         CLOSING_PARENTHESIS

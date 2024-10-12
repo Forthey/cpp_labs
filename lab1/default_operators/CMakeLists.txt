@@ -11,6 +11,7 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(SOURCE_FILES
         source/default_suffix_operators/DefaultSuffixOperators.cpp
         source/default_prefix_operators/DefaultPrefixOperators.cpp
+        source/default_postfix_operators/DefaultPostfixOperators.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})

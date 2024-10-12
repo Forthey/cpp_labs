@@ -7,7 +7,8 @@
 #include <cstdint>
 
 
-class DefaultSuffixOperators {
+class DefaultPostfixOperators {
+protected:
     class opInfo {
     public:
         std::uint8_t priorityLevel;
@@ -16,15 +17,7 @@ class DefaultSuffixOperators {
 
     static std::unordered_map<char, opInfo> opSymbolToInfo;
 
-    static double addition(std::vector<double> const &numbers);
-
-    static double subtraction(std::vector<double> const &numbers);
-
-    static double multiplication(std::vector<double> const &numbers);
-
-    static double division(std::vector<double> const &numbers);
-
-    static double modulo(std::vector<double> const &numbers);
+    static double factorial(std::vector<double> const &numbers);
 public:
     static bool contains(char const opName);
 
