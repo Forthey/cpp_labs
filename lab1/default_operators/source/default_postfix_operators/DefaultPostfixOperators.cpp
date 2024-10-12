@@ -3,21 +3,10 @@
 #include <cmath>
 #include <stdexcept>
 
-
-std::unordered_map<char, DefaultPostfixOperators::opInfo> DefaultPostfixOperators::opSymbolToInfo = {
-        {'!', {100, factorial}},
-};
-
-bool DefaultPostfixOperators::contains(char const opName) {
-    return opSymbolToInfo.contains(opName);
-}
-
-std::function<double(std::vector<double> const &)> const &DefaultPostfixOperators::getCalcFunction(char const opName) {
-    return opSymbolToInfo.at(opName).calcFunction;
-}
-
-std::uint8_t DefaultPostfixOperators::getPriorityLevel(char const opName) {
-    return opSymbolToInfo.at(opName).priorityLevel;
+DefaultPostfixOperators::DefaultPostfixOperators() {
+    opSymbolToInfo = {
+        {"!", {100, factorial}}
+    };
 }
 
 double DefaultPostfixOperators::factorial(const std::vector<double> &numbers) {
@@ -27,6 +16,6 @@ double DefaultPostfixOperators::factorial(const std::vector<double> &numbers) {
 
     for (uint32_t i = 2; i <= numbers[0]; i++)
         result *= i;
-        
+
     return result;
 }

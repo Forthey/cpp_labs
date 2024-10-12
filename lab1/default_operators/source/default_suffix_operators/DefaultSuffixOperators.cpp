@@ -5,24 +5,14 @@
 #include <stdexcept>
 
 
-std::unordered_map<char, DefaultSuffixOperators::opInfo> DefaultSuffixOperators::opSymbolToInfo = {
-        {'+', {4, DefaultSuffixOperators::addition}},
-        {'-', {4, DefaultSuffixOperators::subtraction}},
-        {'*', {5, DefaultSuffixOperators::multiplication}},
-        {'/', {5, DefaultSuffixOperators::division}},
-        {'%', {5, DefaultSuffixOperators::modulo}},
-};
-
-bool DefaultSuffixOperators::contains(char const opName) {
-    return opSymbolToInfo.contains(opName);
-}
-
-std::function<double(std::vector<double> const&)> const& DefaultSuffixOperators::getCalcFunction(char const opName) {
-    return opSymbolToInfo.at(opName).calcFunction;
-}
-
-std::uint8_t DefaultSuffixOperators::getPriorityLevel(char const opName) {
-    return opSymbolToInfo.at(opName).priorityLevel;
+DefaultSuffixOperators::DefaultSuffixOperators() {
+    opSymbolToInfo = {
+            {"+", {4, DefaultSuffixOperators::addition}},
+            {"-", {4, DefaultSuffixOperators::subtraction}},
+            {"*", {5, DefaultSuffixOperators::multiplication}},
+            {"/", {5, DefaultSuffixOperators::division}},
+            {"%", {5, DefaultSuffixOperators::modulo}},
+    };
 }
 
 double DefaultSuffixOperators::addition(std::vector<double> const& numbers) {

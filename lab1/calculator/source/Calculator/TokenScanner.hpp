@@ -9,20 +9,28 @@
 #include "Operands.hpp"
 #include "Parenthesis.hpp"
 
+#include "DefaultSuffixOperators.hpp"
+#include "DefaultPrefixOperators.hpp"
+#include "DefaultPostfixOperators.hpp"
+
 
 class TokenScanner {
+    DefaultPrefixOperators defaultPrefixOperators;
+    DefaultSuffixOperators defaultSuffixOperators;
+    DefaultPostfixOperators defaultPostfixOperators;
+
     bool expectingOp;
     std::shared_ptr<std::queue<Tok::TokenPtr>> tokens;
 
     static double readNumber(std::string::const_iterator &iter, std::string const &expr);
 
+    static bool loadFunction(DefaultOperators &defaultOperators,
+                             std::function<double(std::vector<double> const &)> &func, std::uint8_t &priorityLevel,
+                             Tok::TokenType const opType, std::string const &opName);
+
     static std::string readName(std::string::const_iterator &iter, std::string const &expr);
 
-    bool addOperator(char const ch) noexcept;
-
-//    template<class DefaultOperators>
-//    bool loadFunction(std::function<double(std::vector<double> const &)> const* func, std::uint8_t &priorityLevel,
-//                      Tok::TokenType const opType, char const ch);
+    bool addOperator(std::string const &opName) noexcept;
 
 public:
     std::shared_ptr<std::queue<Tok::TokenPtr>> buildTokens(std::string const &expr);
