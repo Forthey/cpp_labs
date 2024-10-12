@@ -2,15 +2,15 @@
 #include <format>
 
 #include "Calculator/Calculator.hpp"
-#include "Calculator/FuncLoader/FuncLoader.hpp"
+#include "Calculator/FuncLoader/PluginsLoader.hpp"
 #include "CLI.hpp"
 
 
 int main() {
-    FuncLoader::loadFunctions();
+    PluginsLoader::loadFunctions();
 
     CLI::startInteraction();
 
-    FuncLoader::freeFuncs();
+    PluginsLoader::freePlugins();
 	return 0;
 }

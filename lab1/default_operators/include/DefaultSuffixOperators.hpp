@@ -32,5 +32,5 @@ public:
 
     static double modulo(std::vector<double> const &numbers);
 
-    static double power(std::vector<double> const &numbers);
+//    static double power(std::vector<double> const &numbers);
 };

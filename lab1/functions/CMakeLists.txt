@@ -6,13 +6,16 @@ project(functions
         LANGUAGES CXX
 )
 
-set(LIBRARY_OUTPUT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/../out/funcs)
+set(LIBRARY_OUTPUT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/../out/plugins)
 
 list(APPEND functions
-        sqrt log sin cos
+        sqrt log sin cos pow
 )
+
+set(TOKEN_I_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../token_default_classes)
 
 foreach(func ${functions})
     add_library(${func} SHARED source/${func}.cpp)
     set_target_properties(${func} PROPERTIES PREFIX "")
+    target_include_directories(${func} PRIVATE ${TOKEN_I_SOURCE})
 endforeach()

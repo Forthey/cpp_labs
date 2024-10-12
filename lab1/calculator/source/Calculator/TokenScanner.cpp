@@ -5,7 +5,7 @@
 
 #include "SuffixOperator.hpp"
 #include "PrefixOperator.hpp"
-#include "FuncLoader/FuncLoader.hpp"
+#include "FuncLoader/PluginsLoader.hpp"
 #include "Function.hpp"
 
 
@@ -53,20 +53,19 @@ std::shared_ptr<std::queue<std::shared_ptr<Tok::Token>>> TokenScanner::buildToke
         }
         if (addOperator(ch)) {
             ++iter;
-        }
-        else if (std::isdigit(ch)) {
+        } else if (std::isdigit(ch)) {
             tokens->push(std::make_shared<Tok::Number>(readNumber(iter, expr)));
             expectingOp = true;
         } else if (std::isalpha(ch)) {
             std::string name = readName(iter, expr);
 
-            if (FuncLoader::contains(name)) {
-                tokens->emplace(std::make_shared<Tok::Function>(name, FuncLoader::getFunction(name)));
+            if (PluginsLoader::contains(name, Tok::PREFIX_OPERATOR)) {
+                tokens->emplace(std::make_shared<Tok::Function>(name, PluginsLoader::getOpFunction(name)));
             } else {
                 throw std::runtime_error(std::format("ScanError: Unknown name \"{}\"", name));
             }
-        }
-        else {
+        } else {
+            throw std::runtime_error(std::format("ScanError: Unknown literal {}", ch));
         }
     }
 
@@ -74,25 +73,39 @@ std::shared_ptr<std::queue<std::shared_ptr<Tok::Token>>> TokenScanner::buildToke
 }
 
 bool TokenScanner::addOperator(char const ch) noexcept {
+    auto chStr = std::string(1, ch);
     if (ch == '(')
         tokens->emplace(std::make_shared<Tok::OpeningParenthesis>());
     else if (ch == ')')
         tokens->emplace(std::make_shared<Tok::ClosingParenthesis>());
-    else if (DefaultSuffixOperators::contains(ch) && expectingOp) {
-        tokens->emplace(std::make_shared<Tok::SuffixOperator>(
-                std::string(1, ch),
-                DefaultSuffixOperators::getPriorityLevel(ch),
-                DefaultSuffixOperators::getCalcFunction(ch)
-        ));
+    else if (expectingOp &&
+             (DefaultSuffixOperators::contains(ch) || PluginsLoader::contains(chStr, Tok::SUFFIX_OPERATOR))) {
+        std::function<double(std::vector<double> const &)> const *func;
+        std::uint8_t priorityLevel;
+        if (DefaultSuffixOperators::contains(ch)) {
+            func = &DefaultSuffixOperators::getCalcFunction(ch);
+            priorityLevel = DefaultSuffixOperators::getPriorityLevel(ch);
+        } else if (PluginsLoader::contains(chStr, Tok::SUFFIX_OPERATOR)) {
+            func = &PluginsLoader::getOpFunction(chStr);
+            priorityLevel = PluginsLoader::getPriorityLevel(chStr);
+        }
+
+        tokens->emplace(std::make_shared<Tok::SuffixOperator>(chStr, priorityLevel, *func));
         expectingOp = false;
-    }
-    else if (DefaultPrefixOperators::contains(ch) && !expectingOp)
-        tokens->emplace(std::make_shared<Tok::PrefixOperator>(
-                std::string(1, ch),
-                DefaultPrefixOperators::getPriorityLevel(ch),
-                DefaultPrefixOperators::getCalcFunction(ch)
-        ));
-    else
+    } else if (!expectingOp &&
+               (DefaultPrefixOperators::contains(ch) || PluginsLoader::contains(chStr, Tok::SUFFIX_OPERATOR))) {
+        std::function<double(std::vector<double> const &)> const *func;
+        std::uint8_t priorityLevel;
+        if (DefaultPrefixOperators::contains(ch)) {
+            func = &DefaultPrefixOperators::getCalcFunction(ch);
+            priorityLevel = DefaultPrefixOperators::getPriorityLevel(ch);
+        } else if (PluginsLoader::contains(chStr, Tok::PREFIX_OPERATOR)) {
+            func = &PluginsLoader::getOpFunction(chStr);
+            priorityLevel = PluginsLoader::getPriorityLevel(chStr);
+        }
+
+        tokens->emplace(std::make_shared<Tok::PrefixOperator>(chStr, priorityLevel, *func));
+    } else
         return false;
     return true;
 }

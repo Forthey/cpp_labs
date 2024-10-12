@@ -11,7 +11,6 @@ std::unordered_map<char, DefaultSuffixOperators::opInfo> DefaultSuffixOperators:
         {'*', {5, DefaultSuffixOperators::multiplication}},
         {'/', {5, DefaultSuffixOperators::division}},
         {'%', {5, DefaultSuffixOperators::modulo}},
-        {'^', {6, DefaultSuffixOperators::power}},
 };
 
 bool DefaultSuffixOperators::contains(char const opName) {
@@ -46,10 +45,4 @@ double DefaultSuffixOperators::division(std::vector<double> const& numbers) {
 
 double DefaultSuffixOperators::modulo(std::vector<double> const& numbers) {
     return static_cast<double>(static_cast<std::uint32_t>(numbers[0]) % static_cast<std::uint32_t>(numbers[1]));
-}
-
-double DefaultSuffixOperators::power(std::vector<double> const& numbers) {
-    if (numbers[0] < 0.0 && std::abs(static_cast<int>(numbers[1]) - numbers[1]) > 0.0)
-        throw std::runtime_error("CalcError: Exponentiation of a negative number");
-    return std::pow(numbers[0], numbers[1]);
 }
