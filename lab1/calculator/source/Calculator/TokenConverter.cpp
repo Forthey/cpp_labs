@@ -80,6 +80,7 @@ std::shared_ptr<std::queue<Tok::TokenPtr>> TokenConverter::convert(std::queue<To
     dropOperators(std::make_shared<Tok::ClosingParenthesis>());
     if (!operatorsStack->empty())
         throw std::runtime_error("ConvertError: Expected \")\"");
+    operatorsStack.reset();
 
     return resultTokens;
 }
