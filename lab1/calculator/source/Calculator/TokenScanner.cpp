@@ -63,11 +63,11 @@ std::shared_ptr<std::queue<std::shared_ptr<Tok::Token>>> TokenScanner::buildToke
             ++iter;
             continue;
         }
-        if (addOperator(std::string(1, ch))) {
-            ++iter;
-        } else if (std::isdigit(ch)) {
+        if (std::isdigit(ch)) {
             tokens->push(std::make_shared<Tok::Number>(readNumber(iter, expr)));
             expectingOp = true;
+        } else if (addOperator(std::string(1, ch))) {
+            ++iter;
         } else if (std::isalpha(ch)) {
             std::string name = readName(iter, expr);
 
@@ -89,7 +89,6 @@ bool TokenScanner::loadFunction(DefaultOperators &defaultOperators,
                                 std::function<double(std::vector<double> const &)> &func, std::uint8_t &priorityLevel,
                                 Tok::TokenType const opType, std::string const &opName) {
     if (defaultOperators.contains(opName)) {
-        defaultOperators.getCalcFunction(opName);
         func = defaultOperators.getCalcFunction(opName);
         priorityLevel = defaultOperators.getPriorityLevel(opName);
     } else if (PluginsLoader::contains(opName, opType)) {
@@ -111,10 +110,10 @@ bool TokenScanner::addOperator(std::string const &opName) noexcept {
     else if (expectingOp &&
              loadFunction(defaultPostfixOperators, func, priorityLevel, Tok::POSTFIX_OPERATOR, opName)) {
         tokens->emplace(std::make_shared<Tok::PostfixOperator>(opName, priorityLevel, func));
-        expectingOp = false;
     } else if (expectingOp &&
                loadFunction(defaultSuffixOperators, func, priorityLevel, Tok::SUFFIX_OPERATOR, opName)) {
         tokens->emplace(std::make_shared<Tok::SuffixOperator>(opName, priorityLevel, func));
+        expectingOp = false;
     } else if (!expectingOp &&
                loadFunction(defaultPrefixOperators, func, priorityLevel, Tok::PREFIX_OPERATOR, opName)) {
         tokens->emplace(std::make_shared<Tok::PrefixOperator>(opName, priorityLevel, func));
