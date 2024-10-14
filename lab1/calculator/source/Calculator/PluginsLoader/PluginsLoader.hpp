@@ -29,7 +29,7 @@ class PluginsLoader {
     static std::list<DllWatcher> loadedFunctions;
     static std::unordered_map<std::string, FuncWithInfo> nameToFunc;
 public:
-    static void loadFunctions();
+    static void loadPlugins();
 
     static bool contains(std::string const &opName, Tok::TokenType opType);
 

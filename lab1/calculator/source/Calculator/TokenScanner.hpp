@@ -33,5 +33,8 @@ class TokenScanner {
     bool addOperator(std::string const &opName) noexcept;
 
 public:
+    TokenScanner();
+    ~TokenScanner();
+
     std::shared_ptr<std::queue<Tok::TokenPtr>> buildTokens(std::string const &expr);
 };

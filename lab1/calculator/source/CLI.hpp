@@ -5,18 +5,19 @@
 class CLI {
 public:
     static void startInteraction() {
-        std::cout << "print \"exit\" to leave" << std::endl;
+        std::cout << R"(print "exit" or ":q" to leave)" << std::endl;
 
         std::string exprStr;
+        Calculator calculator;
         while (true) {
             std::cout << "> ";
             std::getline(std::cin, exprStr);
 
-            if (exprStr == "exit")
+            if (exprStr == "exit" || exprStr == ":q")
                 return;
 
             try {
-                std::cout << std::format("{} = {}\n", exprStr, Calculator::calculate(exprStr));
+                std::cout << std::format("{} = {}\n", exprStr, calculator.calculate(exprStr));
             } catch (std::exception& exception) {
                 std::cout << exception.what() << std::endl;
             }

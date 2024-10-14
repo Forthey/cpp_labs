@@ -6,8 +6,18 @@
 #include "SuffixOperator.hpp"
 #include "PrefixOperator.hpp"
 #include "PostfixOperator.hpp"
-#include "FuncLoader/PluginsLoader.hpp"
+#include "PluginsLoader/PluginsLoader.hpp"
 #include "Function.hpp"
+
+
+TokenScanner::TokenScanner() {
+    PluginsLoader::loadPlugins();
+}
+
+
+TokenScanner::~TokenScanner() {
+    PluginsLoader::freePlugins();
+}
 
 
 double TokenScanner::readNumber(std::string::const_iterator &iter, std::string const &expr) {
@@ -30,6 +40,7 @@ double TokenScanner::readNumber(std::string::const_iterator &iter, std::string c
 
     return number;
 }
+
 
 std::string TokenScanner::readName(std::string::const_iterator &iter, std::string const &expr) {
     std::string name;

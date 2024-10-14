@@ -13,7 +13,7 @@ SET(SOURCE_FILES
         source/Calculator/TokenConverter.cpp
         source/Calculator/PolishCalculator.cpp
         source/Calculator/Calculator.cpp
-        source/Calculator/FuncLoader/PluginsLoader.cpp
+        source/Calculator/PluginsLoader/PluginsLoader.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

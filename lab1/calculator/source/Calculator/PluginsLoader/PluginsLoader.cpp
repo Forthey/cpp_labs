@@ -17,7 +17,7 @@ std::list<PluginsLoader::DllWatcher> PluginsLoader::loadedFunctions;
 std::unordered_map<std::string, PluginsLoader::FuncWithInfo> PluginsLoader::nameToFunc;
 
 
-void PluginsLoader::loadFunctions() {
+void PluginsLoader::loadPlugins() {
     loadedFunctions.clear();
     for (auto const &entry: std::filesystem::directory_iterator(dllDir)) {
         HMODULE dllHandler = LoadLibrary(_T(entry.path().string().c_str()));
