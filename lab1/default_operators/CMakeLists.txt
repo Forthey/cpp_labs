@@ -15,9 +15,11 @@ set(SOURCE_FILES
         source/DefaultOperators.cpp
 )
 
+set(TOKEN_I_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../token_default_classes)
+
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_include_directories(${PROJECT_NAME} PRIVATE include ${TOKEN_I_SOURCE})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".lib")
 

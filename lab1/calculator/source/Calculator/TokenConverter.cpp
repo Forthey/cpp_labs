@@ -17,17 +17,17 @@ void TokenConverter::parseForPrefix(std::shared_ptr<Tok::Token> &token) {
     if (token->getType() == Tok::TokenType::OPERAND) {
         resultTokens->push(token);
         state = ConvertState::WAITING_FOR_SUFFIX;
-    } else {
-        auto opToken = std::dynamic_pointer_cast<Tok::Operator>(token);
-        if (opToken->getType() == Tok::TokenType::OPENING_PARENTHESIS || opToken->getType() == Tok::TokenType::PREFIX_OPERATOR) {
-            operatorsStack->push(opToken);
-        } else {
-            throw std::runtime_error(std::format(
-                    "ConvertError: Expected number or \"(\", found {}", opToken->getName()
-            ));
-        }
+        return;
     }
 
+    auto opToken = std::dynamic_pointer_cast<Tok::Operator>(token);
+    if (opToken->getType() == Tok::TokenType::OPENING_PARENTHESIS || opToken->getType() == Tok::TokenType::PREFIX_OPERATOR) {
+        operatorsStack->push(opToken);
+    } else {
+        throw std::runtime_error(std::format(
+                "ConvertError: Expected number or \"(\", found {}", opToken->getName()
+        ));
+    }
 }
 
 void TokenConverter::parseForSuffix(std::shared_ptr<Tok::Token> &token) {

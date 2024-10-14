@@ -4,14 +4,16 @@
 #include <cstdint>
 #include <stdexcept>
 
+#include "DefaultPriorityRanges.hpp"
+
 
 DefaultSuffixOperators::DefaultSuffixOperators() {
     opSymbolToInfo = {
-            {"+", {4, DefaultSuffixOperators::addition}},
-            {"-", {4, DefaultSuffixOperators::subtraction}},
-            {"*", {5, DefaultSuffixOperators::multiplication}},
-            {"/", {5, DefaultSuffixOperators::division}},
-            {"%", {5, DefaultSuffixOperators::modulo}},
+            {"+", {MIN_SUFFIX_OPERATORS_PRIORITY + 1, DefaultSuffixOperators::addition}},
+            {"-", {MIN_SUFFIX_OPERATORS_PRIORITY + 1, DefaultSuffixOperators::subtraction}},
+            {"*", {MIN_SUFFIX_OPERATORS_PRIORITY + 2, DefaultSuffixOperators::multiplication}},
+            {"/", {MIN_SUFFIX_OPERATORS_PRIORITY + 2, DefaultSuffixOperators::division}},
+            {"%", {MIN_SUFFIX_OPERATORS_PRIORITY + 2, DefaultSuffixOperators::modulo}},
     };
 }
 

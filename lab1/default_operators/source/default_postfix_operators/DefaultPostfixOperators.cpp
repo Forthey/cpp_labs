@@ -3,9 +3,12 @@
 #include <cmath>
 #include <stdexcept>
 
+#include "DefaultPriorityRanges.hpp"
+
+
 DefaultPostfixOperators::DefaultPostfixOperators() {
     opSymbolToInfo = {
-        {"!", {100, factorial}}
+        {"!", {DEFAULT_POSTFIX_OPERATOR_PRIORITY, factorial}}
     };
 }
 

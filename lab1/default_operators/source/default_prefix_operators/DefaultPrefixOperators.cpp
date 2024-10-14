@@ -2,10 +2,12 @@
 
 #include <cmath>
 
+#include "DefaultPriorityRanges.hpp"
+
 
 DefaultPrefixOperators::DefaultPrefixOperators() {
     opSymbolToInfo = {
-            {"-", {7, unaryMinus}}
+            {"-", {DEFAULT_PREFIX_OPERATOR_PRIORITY, unaryMinus}}
     };
 }
 

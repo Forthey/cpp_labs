@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Operator.hpp"
 
 
@@ -7,7 +6,7 @@ namespace Tok {
 
     class OpeningParenthesis : public Operator {
     public:
-        OpeningParenthesis() : Operator("(", 0) {}
+        OpeningParenthesis() : Operator("(", OPENING_PARENTHESIS_PRIORITY) {}
 
         [[nodiscard]] TokenType getType() const final { return TokenType::OPENING_PARENTHESIS; }
     };
@@ -15,7 +14,7 @@ namespace Tok {
 
     class ClosingParenthesis : public Operator {
     public:
-        ClosingParenthesis() : Operator(")", 1) {}
+        ClosingParenthesis() : Operator(")", CLOSING_PARENTHESIS_PRIORITY) {}
 
         [[nodiscard]] TokenType getType() const final { return TokenType::CLOSING_PARENTHESIS; }
     };

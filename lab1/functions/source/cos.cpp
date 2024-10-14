@@ -3,6 +3,8 @@
 #include <cmath>
 #include <stdexcept>
 
+#include "DefaultPriorityRanges.hpp"
+
 std::string const name = "cos";
 
 std::string const& getName() {
@@ -18,5 +20,5 @@ Tok::TokenType getType() {
 }
 
 uint8_t getPriorityLevel() {
-    return 7;
+    return DEFAULT_FUNCTION_PRIORITY;
 }

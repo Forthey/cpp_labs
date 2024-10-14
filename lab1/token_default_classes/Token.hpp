@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include "DefaultPriorityRanges.hpp"
+
 namespace Tok {
 
     enum TokenType {

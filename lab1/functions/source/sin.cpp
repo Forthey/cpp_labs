@@ -18,5 +18,5 @@ Tok::TokenType getType() {
 }
 
 uint8_t getPriorityLevel() {
-    return 7;
+    return DEFAULT_FUNCTION_PRIORITY;
 }
