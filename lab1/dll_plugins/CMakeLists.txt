@@ -6,25 +6,24 @@ project(functions
         LANGUAGES CXX
 )
 
-set(LIBRARY_OUTPUT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/../out/plugins)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../out/plugins)
 
-list(APPEND functions
+list(APPEND plugins
         sqrt log sin cos pow
 )
 
 set(TOKEN_I_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../token_default_classes)
 
-foreach(func ${functions})
-    add_library(${func} SHARED source/${func}.cpp)
-    set_target_properties(${func} PROPERTIES PREFIX "")
-    target_compile_definitions(${func} PRIVATE COMPILE_EXPORT)
-    target_include_directories(${func} PRIVATE ${TOKEN_I_SOURCE})
-
+foreach (plugin ${plugins})
+    add_library(${plugin} SHARED source/${plugin}.cpp)
+    set_target_properties(${plugin} PROPERTIES PREFIX "")
+    target_compile_definitions(${plugin} PRIVATE COMPILE_EXPORT)
+    target_include_directories(${plugin} PRIVATE ${TOKEN_I_SOURCE})
 
     add_custom_command(
-            TARGET ${func} POST_BUILD
+            TARGET ${plugin} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             ${CMAKE_CURRENT_SOURCE_DIR}/source/export.hpp
             ${CMAKE_CURRENT_SOURCE_DIR}/include/export.hpp
     )
-endforeach()
+endforeach ()

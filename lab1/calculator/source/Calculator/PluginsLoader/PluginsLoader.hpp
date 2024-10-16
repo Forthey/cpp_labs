@@ -19,7 +19,7 @@ class PluginsLoader {
         ~DllWatcher();
     };
 
-    class FuncWithInfo {
+    class CalcFuncWithInfo {
     public:
         Tok::TokenType type;
         std::function<double(std::vector<double> const &)> calcFunc;
@@ -27,8 +27,8 @@ class PluginsLoader {
     };
 
     std::wstring const dllDir;
-    std::list<DllWatcher> loadedFunctions;
-    std::unordered_map<std::string, FuncWithInfo> nameToFunc;
+    std::list<DllWatcher> loadedPlugins;
+    std::unordered_map<std::string, CalcFuncWithInfo> nameToFunc;
 public:
     PluginsLoader(std::wstring dllDir = L"plugins") : dllDir(std::move(dllDir)) {}
 

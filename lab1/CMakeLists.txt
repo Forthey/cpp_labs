@@ -10,5 +10,5 @@ SET(CMAKE_CXX_STANDARD 20)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(default_operators)
-add_subdirectory(functions)
+add_subdirectory(dll_plugins)
 add_subdirectory(calculator)

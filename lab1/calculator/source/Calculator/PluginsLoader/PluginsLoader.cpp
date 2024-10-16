@@ -9,7 +9,7 @@
 
 
 void PluginsLoader::loadPlugins() {
-    loadedFunctions.clear();
+    loadedPlugins.clear();
     for (auto const &entry: std::filesystem::directory_iterator(dllDir)) {
         HMODULE dllHandler = LoadLibrary(_T(entry.path().string().c_str()));
         if (!dllHandler) {
@@ -29,13 +29,13 @@ void PluginsLoader::loadPlugins() {
         std::function getPriorityLevelFunc((decltype(&::getPriorityLevel)(getPriorLevelFuncAddr)));
 
         nameToFunc.emplace(
-        getNameFunc(),
-        FuncWithInfo{
+                getNameFunc(),
+                CalcFuncWithInfo{
                 getTypeFunc(),
                 calcFunc,
                 getPriorityLevelFunc()
         });
-        loadedFunctions.emplace_back(dllHandler);
+        loadedPlugins.emplace_back(dllHandler);
     }
 }
 
@@ -52,7 +52,7 @@ uint8_t PluginsLoader::getPriorityLevel(std::string const &opName) {
 }
 
 void PluginsLoader::freePlugins() {
-    loadedFunctions.clear();
+    loadedPlugins.clear();
 }
 
 
