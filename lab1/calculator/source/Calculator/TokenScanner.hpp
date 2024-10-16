@@ -13,18 +13,21 @@
 #include "DefaultPrefixOperators.hpp"
 #include "DefaultPostfixOperators.hpp"
 
+#include "PluginsLoader/PluginsLoader.hpp"
+
 
 class TokenScanner {
     DefaultPrefixOperators defaultPrefixOperators;
     DefaultSuffixOperators defaultSuffixOperators;
     DefaultPostfixOperators defaultPostfixOperators;
+    PluginsLoader pluginsLoader;
 
-    bool expectingOp;
+    bool expectingOp = false;
     std::shared_ptr<std::queue<Tok::TokenPtr>> tokens;
 
     static double readNumber(std::string::const_iterator &iter, std::string const &expr);
 
-    static bool loadFunction(DefaultOperators &defaultOperators,
+    bool loadFunction(DefaultOperators &defaultOperators,
                              std::function<double(std::vector<double> const &)> &func, std::uint8_t &priorityLevel,
                              Tok::TokenType const opType, std::string const &opName);
 
@@ -33,8 +36,7 @@ class TokenScanner {
     bool addOperator(std::string const &opName) noexcept;
 
 public:
-    TokenScanner();
-    ~TokenScanner();
+    TokenScanner() { pluginsLoader.loadPlugins(); }
 
     std::shared_ptr<std::queue<Tok::TokenPtr>> buildTokens(std::string const &expr);
 };

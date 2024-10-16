@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include <functional>
+#include <utility>
 #include <vector>
 #include <list>
 #include "Token.hpp"
@@ -25,17 +26,21 @@ class PluginsLoader {
         uint8_t priorityLevel;
     };
 
-    static std::wstring const dllDir;
-    static std::list<DllWatcher> loadedFunctions;
-    static std::unordered_map<std::string, FuncWithInfo> nameToFunc;
+    std::wstring const dllDir;
+    std::list<DllWatcher> loadedFunctions;
+    std::unordered_map<std::string, FuncWithInfo> nameToFunc;
 public:
-    static void loadPlugins();
+    PluginsLoader(std::wstring dllDir = L"plugins") : dllDir(std::move(dllDir)) {}
 
-    static bool contains(std::string const &opName, Tok::TokenType opType);
+    ~PluginsLoader() { freePlugins(); }
 
-    static std::function<double(std::vector<double> const &)> &getOpFunction(std::string const &opName);
+    void loadPlugins();
 
-    static uint8_t getPriorityLevel(std::string const &opName);
+    bool contains(std::string const &opName, Tok::TokenType opType);
 
-    static void freePlugins();
+    std::function<double(std::vector<double> const &)> &getOpFunction(std::string const &opName);
+
+    uint8_t getPriorityLevel(std::string const &opName);
+
+    void freePlugins();
 };

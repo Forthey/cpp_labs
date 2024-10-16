@@ -6,18 +6,7 @@
 #include "SuffixOperator.hpp"
 #include "PrefixOperator.hpp"
 #include "PostfixOperator.hpp"
-#include "PluginsLoader/PluginsLoader.hpp"
 #include "Function.hpp"
-
-
-TokenScanner::TokenScanner() {
-    PluginsLoader::loadPlugins();
-}
-
-
-TokenScanner::~TokenScanner() {
-    PluginsLoader::freePlugins();
-}
 
 
 double TokenScanner::readNumber(std::string::const_iterator &iter, std::string const &expr) {
@@ -71,8 +60,8 @@ std::shared_ptr<std::queue<std::shared_ptr<Tok::Token>>> TokenScanner::buildToke
         } else if (std::isalpha(ch)) {
             std::string name = readName(iter, expr);
 
-            if (PluginsLoader::contains(name, Tok::PREFIX_OPERATOR)) {
-                tokens->emplace(std::make_shared<Tok::Function>(name, PluginsLoader::getOpFunction(name)));
+            if (pluginsLoader.contains(name, Tok::PREFIX_OPERATOR)) {
+                tokens->emplace(std::make_shared<Tok::Function>(name, pluginsLoader.getOpFunction(name)));
             } else {
                 throw std::runtime_error(std::format("ScanError: Unknown name \"{}\"", name));
             }
@@ -91,9 +80,9 @@ bool TokenScanner::loadFunction(DefaultOperators &defaultOperators,
     if (defaultOperators.contains(opName)) {
         func = defaultOperators.getCalcFunction(opName);
         priorityLevel = defaultOperators.getPriorityLevel(opName);
-    } else if (PluginsLoader::contains(opName, opType)) {
-        func = PluginsLoader::getOpFunction(opName);
-        priorityLevel = PluginsLoader::getPriorityLevel(opName);
+    } else if (pluginsLoader.contains(opName, opType)) {
+        func = pluginsLoader.getOpFunction(opName);
+        priorityLevel = pluginsLoader.getPriorityLevel(opName);
     } else
         return false;
     return true;

@@ -7,10 +7,6 @@
 
 #include "export.hpp"
 
-std::wstring const PluginsLoader::dllDir = L"plugins";
-std::list<PluginsLoader::DllWatcher> PluginsLoader::loadedFunctions;
-std::unordered_map<std::string, PluginsLoader::FuncWithInfo> PluginsLoader::nameToFunc;
-
 
 void PluginsLoader::loadPlugins() {
     loadedFunctions.clear();
