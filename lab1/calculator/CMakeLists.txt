@@ -21,12 +21,12 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 set(TOKEN_I_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../token_default_classes)
 set(DEFAULT_OP_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../default_operators)
-set(FUNC_HEADERS_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../functions)
+set(PLUGINS_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../functions)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${TOKEN_I_SOURCE}
         ${DEFAULT_OP_SOURCE}/include
-        ${FUNC_HEADERS_SOURCE}/include
+        ${PLUGINS_SOURCE}/include
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEFAULT_OP_SOURCE}/lib/default_operators.lib)

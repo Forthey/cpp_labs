@@ -5,12 +5,7 @@
 #include <filesystem>
 #include <iostream>
 
-
-using getNameTemplate = std::string const &(*)();
-using calcTemplate = double (*)(std::vector<double> const &);
-using getTypeTemplate = Tok::TokenType (*)();
-using getPriorityLevelTemplate = uint8_t (*)();
-
+#include "export.hpp"
 
 std::wstring const PluginsLoader::dllDir = L"plugins";
 std::list<PluginsLoader::DllWatcher> PluginsLoader::loadedFunctions;
@@ -21,21 +16,28 @@ void PluginsLoader::loadPlugins() {
     loadedFunctions.clear();
     for (auto const &entry: std::filesystem::directory_iterator(dllDir)) {
         HMODULE dllHandler = LoadLibrary(_T(entry.path().string().c_str()));
-        if (!dllHandler)
+        if (!dllHandler) {
             continue;
+        }
         FARPROC getNameFuncAddr = GetProcAddress(dllHandler, "getName");
         FARPROC calcFuncAddr = GetProcAddress(dllHandler, "calc");
         FARPROC getTypeFuncAddr = GetProcAddress(dllHandler, "getType");
         FARPROC getPriorLevelFuncAddr = GetProcAddress(dllHandler, "getPriorityLevel");
 
-        if (!calcFuncAddr || !getNameFuncAddr || !getTypeFuncAddr)
+        if (!calcFuncAddr || !getNameFuncAddr || !getTypeFuncAddr || !getPriorLevelFuncAddr)
             continue;
+
+        std::function getNameFunc((decltype(&::getName)(getNameFuncAddr)));
+        std::function calcFunc((decltype(&::calc)(calcFuncAddr)));
+        std::function getTypeFunc((decltype(&::getType)(getTypeFuncAddr)));
+        std::function getPriorityLevelFunc((decltype(&::getPriorityLevel)(getPriorLevelFuncAddr)));
+
         nameToFunc.emplace(
-                ((getNameTemplate) getNameFuncAddr)(),
-                FuncWithInfo{
-                        ((getTypeTemplate) getTypeFuncAddr)(),
-                        (calcTemplate) calcFuncAddr,
-                        ((getPriorityLevelTemplate)getPriorLevelFuncAddr)()
+        getNameFunc(),
+        FuncWithInfo{
+                getTypeFunc(),
+                calcFunc,
+                getPriorityLevelFunc()
         });
         loadedFunctions.emplace_back(dllHandler);
     }
