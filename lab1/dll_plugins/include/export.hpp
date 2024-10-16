@@ -4,6 +4,8 @@
 #include <string>
 
 #include "Token.hpp"
+#include "CalcException.hpp"
+
 
 #if defined(linux) || defined(__linux__)
     #define FUNC_API __attribute__((visibility("default")))

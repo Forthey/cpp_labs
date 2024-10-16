@@ -7,6 +7,7 @@
 #include "PrefixOperator.hpp"
 #include "PostfixOperator.hpp"
 #include "Function.hpp"
+#include "CalcException.hpp"
 
 
 double TokenScanner::readNumber(std::string::const_iterator &iter, std::string const &expr) {
@@ -63,10 +64,10 @@ std::shared_ptr<std::queue<std::shared_ptr<Tok::Token>>> TokenScanner::buildToke
             if (pluginsLoader.contains(name, Tok::PREFIX_OPERATOR)) {
                 tokens->emplace(std::make_shared<Tok::Function>(name, pluginsLoader.getOpFunction(name)));
             } else {
-                throw std::runtime_error(std::format("ScanError: Unknown name \"{}\"", name));
+                throw CalcException("ScanError", std::format("Unknown name \"{}\"", name));
             }
         } else {
-            throw std::runtime_error(std::format("ScanError: Unknown literal {}", ch));
+            throw CalcException("ScanError", std::format("Unknown literal \"{}\"", ch));
         }
     }
 

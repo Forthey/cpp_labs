@@ -12,7 +12,7 @@ std::string const& getName() {
 
 double calc(std::vector<double> const &x) {
     if (x[0] < 0.0) {
-        throw std::runtime_error("CalcError: sqrt argument must be more than 0");
+        throw CalcException("CalcError", "\"sqrt\" argument must be more than 0");
     }
     return static_cast<double>(std::sqrt(static_cast<long double>(x[0])));
 }

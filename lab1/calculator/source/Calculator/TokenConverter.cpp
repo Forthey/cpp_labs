@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Parenthesis.hpp"
+#include "CalcException.hpp"
 
 
 void TokenConverter::dropOperators(Tok::OperatorPtr const &op) {
@@ -21,25 +22,24 @@ void TokenConverter::parseForPrefix(std::shared_ptr<Tok::Token> &token) {
     }
 
     auto opToken = std::dynamic_pointer_cast<Tok::Operator>(token);
-    if (opToken->getType() == Tok::TokenType::OPENING_PARENTHESIS || opToken->getType() == Tok::TokenType::PREFIX_OPERATOR) {
+    if (opToken->getType() == Tok::TokenType::OPENING_PARENTHESIS ||
+        opToken->getType() == Tok::TokenType::PREFIX_OPERATOR) {
         operatorsStack->push(opToken);
     } else {
-        throw std::runtime_error(std::format(
-                "ConvertError: Expected number or \"(\", found {}", opToken->getName()
-        ));
+        throw CalcException("ConvertError", std::format("Expected number or \"(\", found {}", opToken->getName()));
     }
 }
 
 void TokenConverter::parseForSuffix(std::shared_ptr<Tok::Token> &token) {
     if (token->getType() == Tok::TokenType::OPERAND)
-        throw std::runtime_error("ConvertError: Expected binary operator or \")\", found number");
+        throw CalcException("ConvertError", "Expected binary operator or \")\", found number");
 
     auto opToken = std::dynamic_pointer_cast<Tok::Operator>(token);
     dropOperators(opToken);
 
     if (opToken->getType() == Tok::TokenType::OPENING_PARENTHESIS &&
         (operatorsStack->empty() || operatorsStack->top()->getType() != Tok::TokenType::CLOSING_PARENTHESIS))
-        throw std::runtime_error("ConvertError: Expected \"(\"");
+        throw CalcException("ConvertError", "Expected \"(\"");
 
     if (opToken->getType() == Tok::TokenType::CLOSING_PARENTHESIS)
         operatorsStack->pop();
@@ -59,7 +59,7 @@ std::shared_ptr<std::queue<Tok::TokenPtr>> TokenConverter::convert(std::queue<To
 
     while (true) {
         if (tokens.empty() && state == ConvertState::WAITING_FOR_PREFIX)
-            throw std::runtime_error("ConvertError: Unexpected end of the expression");
+            throw CalcException("ConvertError", "Unexpected end of the expression");
         if (tokens.empty() && state == ConvertState::WAITING_FOR_SUFFIX) {
             break;
         } else {
@@ -79,7 +79,7 @@ std::shared_ptr<std::queue<Tok::TokenPtr>> TokenConverter::convert(std::queue<To
 
     dropOperators(std::make_shared<Tok::ClosingParenthesis>());
     if (!operatorsStack->empty())
-        throw std::runtime_error("ConvertError: Expected \")\"");
+        throw CalcException("ConvertError", "Expected \")\"");
     operatorsStack.reset();
 
     return resultTokens;

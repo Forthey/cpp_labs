@@ -3,6 +3,7 @@
 #include <stack>
 
 #include "ComputableOperator.hpp"
+#include "CalcException.hpp"
 
 
 namespace Tok {
@@ -11,7 +12,7 @@ namespace Tok {
     protected:
         std::vector<double> getNumbers(std::stack<OperandPtr> &numStack) override {
             if (numStack.size() < 1ull)
-                throw std::runtime_error("CalcMultiplyError: unexpected end of expression");
+                throw CalcException("CalcMultiplyError", "Unexpected end of expression");
 
             auto value = numStack.top();
             numStack.pop();

@@ -6,6 +6,9 @@ project(functions
         LANGUAGES CXX
 )
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../out/plugins)
 
 list(APPEND plugins
@@ -13,12 +16,16 @@ list(APPEND plugins
 )
 
 set(TOKEN_I_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../token_default_classes)
+set(CALC_EXCEPTION_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../calc_custom_exception)
 
 foreach (plugin ${plugins})
     add_library(${plugin} SHARED source/${plugin}.cpp)
     set_target_properties(${plugin} PROPERTIES PREFIX "")
     target_compile_definitions(${plugin} PRIVATE COMPILE_EXPORT)
-    target_include_directories(${plugin} PRIVATE ${TOKEN_I_SOURCE})
+    target_include_directories(${plugin} PRIVATE
+            ${TOKEN_I_SOURCE}
+            ${CALC_EXCEPTION_SOURCE}
+    )
 
     add_custom_command(
             TARGET ${plugin} POST_BUILD

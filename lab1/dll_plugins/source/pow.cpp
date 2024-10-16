@@ -11,7 +11,7 @@ std::string const& getName() {
 
 double calc(std::vector<double> const &x) {
     if (x[0] < 0.0 && std::abs(static_cast<int>(x[1]) - x[1]) > 0.0)
-        throw std::runtime_error("CalcError: Exponentiation of a negative number");
+        throw CalcException("CalcError", "Exponentiation of a negative number");
     return std::pow(x[0], x[1]);
 }
 

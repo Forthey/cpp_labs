@@ -16,10 +16,15 @@ set(SOURCE_FILES
 )
 
 set(TOKEN_I_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../token_default_classes)
+set(CALC_EXCEPTION_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/../calc_custom_exception)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE include ${TOKEN_I_SOURCE})
+target_include_directories(${PROJECT_NAME} PRIVATE
+        include
+        ${TOKEN_I_SOURCE}
+        ${CALC_EXCEPTION_SOURCE}
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".lib")
 

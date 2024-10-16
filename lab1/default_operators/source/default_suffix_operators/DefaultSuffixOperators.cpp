@@ -1,10 +1,9 @@
 #include "DefaultSuffixOperators.hpp"
 
 #include <cmath>
-#include <cstdint>
-#include <stdexcept>
 
 #include "DefaultPriorityRanges.hpp"
+#include "CalcException.hpp"
 
 
 DefaultSuffixOperators::DefaultSuffixOperators() {
@@ -31,7 +30,7 @@ double DefaultSuffixOperators::multiplication(std::vector<double> const& numbers
 
 double DefaultSuffixOperators::division(std::vector<double> const& numbers) {
     if (numbers[1] == 0.0)
-        throw std::runtime_error("CalcError: Division by zero");
+        throw CalcException("CalcError", "Division by zero");
     return numbers[0] / numbers[1];
 }
 

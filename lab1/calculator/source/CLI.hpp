@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 
+#include "CalcException.hpp"
+
 
 class CLI {
 public:
@@ -18,8 +20,11 @@ public:
 
             try {
                 std::cout << std::format("{} = {}\n", exprStr, calculator.calculate(exprStr));
-            } catch (std::exception& exception) {
+            } catch (CalcException& exception) {
                 std::cout << exception.what() << std::endl;
+            } catch (std::exception& exception) {
+                std::cout << std::format("Caught exception during program runtime\nwhat: {}", exception.what());
+                exit(1);
             }
         }
     }
