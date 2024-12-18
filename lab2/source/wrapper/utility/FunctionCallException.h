@@ -5,9 +5,7 @@
 class FunctionCallException : public std::exception {
       std::string message;
 public:
-    template <typename... Args>
-    explicit FunctionCallException(const std::string& msg, Args... args) {
-        std::format(message, args...);
+    explicit FunctionCallException(std::string const& msg) : message(msg) {
     }
 
     const char* what() const noexcept override {
