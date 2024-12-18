@@ -7,29 +7,7 @@
 std::set<char> const DocumentEditor::sentenceDelimiters = {'.', '!', '?'};
 
 
-bool DocumentEditor::load() {
-    if (!isOpen()) {
-        return false;
-    }
-    std::stringstream buffer;
-    buffer << document.rdbuf();
-    content = buffer.str();
-    return true;
-}
-
-
-bool DocumentEditor::save() {
-    if (!isOpen()) {
-        return false;
-    }
-    document << content;
-    return true;
-}
-
-
-void DocumentEditor::close() {
-    content.clear();
-    document.close();
+DocumentEditor::DocumentEditor(std::string content) : content(std::move(content)) {
 }
 
 
@@ -98,15 +76,23 @@ void DocumentEditor::addSentenceNumbering() {
     while ((sentenceEnd = std::find_if(sentenceEnd, content.end(), findPredicate)) != content.end()) {
         ++sentenceEnd;
         if (!sentenceDelimiters.contains(*sentenceBegin)) {
+            auto prevCharIter = (sentenceBegin == content.begin() ? sentenceBegin : std::prev(sentenceBegin));
+
             std::string formattedSentence = std::format("{}. {}\n", number, std::string(sentenceBegin, sentenceEnd));
             content.replace(sentenceBegin, sentenceEnd, formattedSentence);
+
+            if (prevCharIter == sentenceBegin) {
+                sentenceBegin = content.begin();
+            } else {
+                sentenceBegin = std::next(prevCharIter);
+            }
             sentenceEnd = sentenceBegin + formattedSentence.length();
             number++;
         }
         sentenceBegin = sentenceEnd;
     }
 
-    if (!sentenceDelimiters.contains(*sentenceBegin)) {
+    if (sentenceBegin != content.end() && !sentenceDelimiters.contains(*sentenceBegin)) {
         std::string formattedSentence = std::format("{}. {}", number, std::string(sentenceBegin, sentenceEnd));
         content.replace(sentenceBegin, sentenceEnd, formattedSentence);
     }
