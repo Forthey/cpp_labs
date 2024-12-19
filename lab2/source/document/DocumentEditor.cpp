@@ -60,40 +60,62 @@ void DocumentEditor::capitalizeSentence(std::size_t pos) {
         return;
     }
 
-    while (pos > 0 && !sentenceDelimiters.contains(content[pos - 1])) {
+    while (pos > 0 && !sentenceDelimiters.contains(content[pos - 1]))
         pos--;
+    while (pos < content.length() && std::isspace(content[pos]))
+        pos++;
+    if (pos < content.length())
+        content[pos] = static_cast<char>(std::toupper(content[pos]));
+}
+
+
+std::string::iterator iterFromIndex(std::string &str, std::size_t index) {
+    auto iter = str.begin();
+    std::advance(iter, index);
+    return iter;
+}
+
+std::size_t indexFromIter(std::string const &str, std::string::iterator const &iter) {
+    int i = 0;
+    auto leftIter = str.begin();
+    while (leftIter != iter) {
+        ++leftIter;
+        ++i;
     }
-    content[pos] = static_cast<char>(std::toupper(content[pos]));
+    return i;
 }
 
 
 void DocumentEditor::addSentenceNumbering() {
     static auto findPredicate = [&](char c) -> bool { return sentenceDelimiters.contains(c); };
 
-    auto sentenceBegin = content.begin(), sentenceEnd = content.begin();
+    std::size_t sentenceBeginIndex = 0;
+    auto sentenceEnd = content.begin();
     std::size_t number = 1;
 
     while ((sentenceEnd = std::find_if(sentenceEnd, content.end(), findPredicate)) != content.end()) {
         ++sentenceEnd;
-        if (!sentenceDelimiters.contains(*sentenceBegin)) {
-            auto prevCharIter = (sentenceBegin == content.begin() ? sentenceBegin : std::prev(sentenceBegin));
+        std::size_t sentenceEndIndex = indexFromIter(content, sentenceEnd);
 
-            std::string formattedSentence = std::format("{}. {}\n", number, std::string(sentenceBegin, sentenceEnd));
-            content.replace(sentenceBegin, sentenceEnd, formattedSentence);
+        if (!sentenceDelimiters.contains(content[sentenceBeginIndex])) {
+            std::string formattedSentence = std::format("{}. {}\n", number,
+                                                        content.substr(sentenceBeginIndex,
+                                                                       sentenceEndIndex - sentenceBeginIndex + 1));
+            content.replace(sentenceBeginIndex, sentenceEndIndex - sentenceBeginIndex + 1, formattedSentence);
 
-            if (prevCharIter == sentenceBegin) {
-                sentenceBegin = content.begin();
-            } else {
-                sentenceBegin = std::next(prevCharIter);
-            }
-            sentenceEnd = sentenceBegin + formattedSentence.length();
+            sentenceEndIndex = sentenceBeginIndex + formattedSentence.length();
+            sentenceEnd = iterFromIndex(content, sentenceEndIndex);
             number++;
         }
-        sentenceBegin = sentenceEnd;
+        sentenceBeginIndex = sentenceEndIndex;
     }
 
-    if (sentenceBegin != content.end() && !sentenceDelimiters.contains(*sentenceBegin)) {
-        std::string formattedSentence = std::format("{}. {}", number, std::string(sentenceBegin, sentenceEnd));
-        content.replace(sentenceBegin, sentenceEnd, formattedSentence);
+    if (sentenceBeginIndex < content.size() && !sentenceDelimiters.contains(content[sentenceBeginIndex])) {
+        std::size_t sentenceEndIndex = indexFromIter(content, sentenceEnd);
+        std::string const formattedSentence = std::format("{}. {}\n", number,
+                                                          content.substr(
+                                                              sentenceBeginIndex,
+                                                              sentenceEndIndex - sentenceBeginIndex + 1));
+        content.replace(sentenceBeginIndex, sentenceEndIndex - sentenceBeginIndex + 1, formattedSentence);
     }
 }

@@ -15,7 +15,6 @@ SET(SOURCE_FILES
         source/main.cpp
         source/engine/Engine.cpp
         source/document/DocumentEditor.cpp
-        source/wrapper/Wrapper.cpp
         source/wrapper/utility/FunctionCallException.h
 )
 
